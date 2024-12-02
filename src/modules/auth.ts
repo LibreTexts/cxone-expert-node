@@ -10,9 +10,6 @@ export default class Auth {
     }
 
     public ServerToken({ key, secret, user }: ServerTokenParams) {
-        console.log('key', key);
-        console.log('secret', secret);
-        console.log('user', user);
         const hmac = createHmac('sha256', secret);
         const epoch = Math.floor(Date.now() / 1000);
         hmac.update(`${key}_${epoch}_${user}`);
