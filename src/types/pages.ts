@@ -62,18 +62,13 @@ export type GetPageSubPagesResponse = {
 };
 
 export type GetPageDiffResponse = {
-  "@revision": string;
   "@type": string;
-  p: {
-    "#text": string;
-    ins: string[];
-    del: string[];
-  };
+  "#text": string;
 };
 
 export type GetPageFilesResponse = {
-  "@revision": string;
   "@count": string;
+  "@offset": string;
   "@href": string;
   file: PageFile | PageFile[];
 };
