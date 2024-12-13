@@ -14,6 +14,12 @@ export type GetPageParams = {
   exclude?: string;
 } & BaseQueryParams;
 
+export type GetPagesParams = {
+  startpage?: boolean;
+  format?: "html" | "xml" | "google";
+  authenticate?: boolean;
+};
+
 export type GetPageContentsParams = {
   overview?: boolean;
   include?: string;
@@ -43,8 +49,76 @@ export type GetPageDiffParams = {
 
 export type GetPageFilesParams = BaseQueryParams & PaginationQueryParams;
 
+export type GetPageExplainParams = GetPageParams;
+
+export type GetPageInfoParams = {
+  exclude?: string;
+} & BaseQueryParams;
+
+export type GetPageFileInfoParams = {
+  includeDeleted?: boolean;
+  revision?: string;
+} & BaseQueryParams;
+
+export type GetPageFileRevisionsParams = {
+  changefilter?: string;
+} & BaseQueryParams;
+
+export type GetPageContentsExplainParams = {
+  overview?: boolean;
+  include?: string;
+  reltopath?: string;
+  relto?: number;
+  pageid?: number;
+  includes?: "overview" | "tags" | "overview,tags";
+  format?: "html" | "xhtml" | "text" | "dekicode";
+  highlight?: string;
+  revision?: string;
+  mode: RequestModeQueryParam;
+  section?: string;
+} & BaseQueryParams;
+
+// export type GetPageFindParams = {
+//   tags?: string;
+//   missingClassifications?: string;
+//   since?: string;
+//   upto?: string;
+//   include?: string;
+// };
+
+export type GetPageFileRevisionsResponse = {
+  "@count": string;
+  "@href": string;
+  file:
+    | (PageFile & { "page.parent": GetPageInfoResponse; "user-action": string })
+    | (PageFile & {
+        "page.parent": GetPageInfoResponse;
+        "user-action": string;
+      })[];
+};
+
 export type GetPageResponse = PageBase & PageExtended;
+export type GetPagesResponse = {
+  "@id": string;
+  "@guid": string;
+  "@draft.state": string;
+  "@href": string;
+  "@deleted": string;
+  "date.created": string;
+  language: string;
+  namespace: string;
+  path: PagePath & { "@type": string };
+  subpages: Subpages | "";
+};
+
 export type GetPageSecurityResponse = PageSecurity;
+
+export type GetPageExplainResponse = PageBase & PageExtended;
+
+export type GetPageInfoResponse = Omit<
+  PageBase,
+  "article" | "date.modified" | "security"
+>;
 
 export type GetPageContentsResponse = {
   "@revision": string;
@@ -54,6 +128,10 @@ export type GetPageContentsResponse = {
   head: string;
   tail: string;
 };
+
+export type GetPageFileInfoResponse = {
+  "page.parent": GetPageInfoResponse;
+} & PageFile;
 
 export type GetPageSubPagesResponse = {
   "@count": string;
@@ -71,6 +149,18 @@ export type GetPageFilesResponse = {
   "@offset": string;
   "@href": string;
   file: PageFile | PageFile[];
+};
+
+export type GetPageContentsExplainResponse = {
+  "@elapsed": string;
+  "@id": string;
+  "@path": string;
+  "@version": string;
+  calls: object;
+  "data-stats": PageDataStats;
+  "db-summary": PageDbSummary;
+  "hs-summary": PageHsSummary;
+  "redis-summary": PageRedisSummary;
 };
 
 export type PageBase = {
@@ -173,7 +263,7 @@ export type PageFile = {
   "@res-contents-id": string;
   "alt-text": string;
   contents: object;
-  "contents.preview": any[];
+  "contents.preview"?: any[];
   "date.created": string;
   "date.last-modified": string;
   description: string;
@@ -194,4 +284,53 @@ export type PageTag = {
 export type PagePath = {
   "@seo": string;
   "#text": string;
+};
+
+export type Subpages = {
+  page: Subpage[] | Subpage;
+};
+
+export type Subpage = {
+  "@id": string;
+  "@guid": string;
+  "@draft.state": string;
+  "@href": string;
+  "@deleted": string;
+  "date.created": string;
+  language: string;
+  namespace: string;
+  path: PagePath;
+  subpages: Subpages | "";
+  title: string;
+  "uri.ui": string;
+};
+
+export type PageDataStats = {
+  entry: PageDataEntry | PageDataEntry[];
+};
+
+export type PageDataEntry = {
+  "@name": string;
+  "@value": string;
+};
+
+export type PageDbSummary = {
+  "@elapsed": string;
+  "@count": string;
+  query: PageSummaryQuery | PageSummaryQuery[];
+};
+
+export type PageHsSummary = PageDbSummary;
+
+export type PageRedisSummary = {
+  "@elapsed": string;
+  "@count": string;
+};
+
+export type PageSummaryQuery = {
+  "@name": string;
+  "@elapsed": string;
+  "@average": string;
+  "@max": string;
+  "@count": string;
 };
