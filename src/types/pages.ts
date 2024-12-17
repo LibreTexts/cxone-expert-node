@@ -81,6 +81,21 @@ export type GetPagePropertiesParams = {
   contentcutoff?: number;
 } & BaseQueryParams;
 
+export type GetPageTagsParams = {
+  exports?: boolean;
+} & BaseQueryParams;
+
+export type GetPageTreeParams = {
+  startpage?: boolean;
+  format?: "html" | "xml" | "google";
+  include?: string;
+  authenticate?: boolean;
+};
+
+export type GetPagePopularParams = {
+  authenticate?: boolean;
+} & BaseQueryParams;
+
 export type GetPageResponse = PageBase & PageExtended;
 export type GetPageSecurityResponse = PageSecurity;
 
@@ -160,6 +175,28 @@ export type GetPagePropertiesResponse = {
   "@count": string;
   "@href": string;
   property: PageProperty | PageProperty[];
+};
+
+export type GetPageTagsResponse = {
+  "@count": string;
+  "@href": string;
+  tag?: PageTag | PageTag[];
+};
+
+export type GetPageTreeResponse = {
+  page: Subpage;
+};
+
+export type GetPagePopularResponse = {
+  "@count": string;
+  "@href": string;
+  page: PageWithoutSubpages | PageWithoutSubpages[];
+};
+
+export type PageWithoutSubpages = Omit<Subpage, "subpages"> & {
+  metrics: {
+    "metric.views": string;
+  };
 };
 
 export type PageProperty = {
@@ -296,11 +333,12 @@ export type PageTag = {
   "@href": string;
   title: string;
   type: string;
-  url: string;
+  uri: string;
 };
 
 export type PagePath = {
   "@seo": string;
+  "@type"?: string;
   "#text": string;
 };
 
