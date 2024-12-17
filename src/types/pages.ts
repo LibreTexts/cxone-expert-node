@@ -42,6 +42,24 @@ export type GetPageDiffParams = {
 } & BaseQueryParams;
 
 export type GetPageFilesParams = BaseQueryParams & PaginationQueryParams;
+export type GetPageExplainParams = GetPageParams;
+export type GetPageInfoParams = {
+  exclude?: string;
+} & BaseQueryParams;
+export type GetPagesParams = {
+  startpage?: boolean;
+  format?: "html" | "xml" | "google";
+  authenticate?: boolean;
+};
+
+export type GetPageFileInfoParams = {
+  includeDeleted?: boolean;
+  revision?: string;
+} & BaseQueryParams;
+
+export type GetPageFileRevisionsParams = {
+  changefilter?: string;
+} & BaseQueryParams;
 
 export type GetPageResponse = PageBase & PageExtended;
 export type GetPageSecurityResponse = PageSecurity;
@@ -71,6 +89,39 @@ export type GetPageFilesResponse = {
   "@offset": string;
   "@href": string;
   file: PageFile | PageFile[];
+};
+export type GetPageExplainResponse = PageBase & PageExtended;
+export type GetPageInfoResponse = Omit<
+  PageBase,
+  "article" | "date.modified" | "security"
+>;
+
+export type GetPagesResponse = {
+  "@id": string;
+  "@guid": string;
+  "@draft.state": string;
+  "@href": string;
+  "@deleted": string;
+  "date.created": string;
+  language: string;
+  namespace: string;
+  path: PagePath & { "@type": string };
+  subpages: Subpages | "";
+};
+
+export type GetPageFileInfoResponse = {
+  "page.parent": GetPageInfoResponse;
+} & PageFile;
+
+export type GetPageFileRevisionsResponse = {
+  "@count": string;
+  "@href": string;
+  file:
+    | (PageFile & { "page.parent": GetPageInfoResponse; "user-action": string })
+    | (PageFile & {
+        "page.parent": GetPageInfoResponse;
+        "user-action": string;
+      })[];
 };
 
 export type PageBase = {
@@ -194,4 +245,23 @@ export type PageTag = {
 export type PagePath = {
   "@seo": string;
   "#text": string;
+};
+
+export type Subpages = {
+  page: Subpage[] | Subpage;
+};
+
+export type Subpage = {
+  "@id": string;
+  "@guid": string;
+  "@draft.state": string;
+  "@href": string;
+  "@deleted": string;
+  "date.created": string;
+  language: string;
+  namespace: string;
+  path: PagePath;
+  subpages: Subpages | "";
+  title: string;
+  "uri.ui": string;
 };
