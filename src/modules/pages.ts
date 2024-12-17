@@ -25,6 +25,12 @@ import {
   GetPageContentsExplainResponse,
   GetPagePropertiesParams,
   GetPagePropertiesResponse,
+  GetPageTagsParams,
+  GetPageTagsResponse,
+  GetPageTreeParams,
+  GetPageTreeResponse,
+  GetPagePopularParams,
+  GetPagePopularResponse,
 } from "../types";
 import { getTld } from "../utils";
 import Auth from "./auth";
@@ -288,6 +294,61 @@ export default class Pages {
         },
       }
     );
+    return res.data;
+  }
+
+  public async getPageTags(
+    id: string | number,
+    funcArgs: BaseArgs,
+    reqArgs?: GetPageTagsParams
+  ) {
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.get<GetPageTagsResponse>(
+      `/pages/${pageId}/tags`,
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+    return res.data;
+  }
+
+  public async getPageTree(
+    id: string | number,
+    funcArgs: BaseArgs,
+    reqArgs?: GetPageTreeParams
+  ) {
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.get<GetPageTreeResponse>(
+      `/pages/${pageId}/tree`,
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+    return res.data;
+  }
+
+  public async getPagePopular(
+    funcArgs: BaseArgs,
+    reqArgs?: GetPagePopularParams
+  ) {
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.get<GetPagePopularResponse>(`/pages/popular`, {
+      params: {
+        ...reqArgs,
+      },
+    });
     return res.data;
   }
 }
