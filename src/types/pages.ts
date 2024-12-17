@@ -42,6 +42,59 @@ export type GetPageDiffParams = {
 } & BaseQueryParams;
 
 export type GetPageFilesParams = BaseQueryParams & PaginationQueryParams;
+export type GetPageExplainParams = GetPageParams;
+export type GetPageInfoParams = {
+  exclude?: string;
+} & BaseQueryParams;
+export type GetPagesParams = {
+  startpage?: boolean;
+  format?: "html" | "xml" | "google";
+  authenticate?: boolean;
+};
+
+export type GetPageFileInfoParams = {
+  includeDeleted?: boolean;
+  revision?: string;
+} & BaseQueryParams;
+
+export type GetPageFileRevisionsParams = {
+  changefilter?: string;
+} & BaseQueryParams;
+
+export type GetPageContentsExplainParams = {
+  overview?: boolean;
+  include?: string;
+  reltopath?: string;
+  relto?: number;
+  pageid?: number;
+  includes?: "overview" | "tags" | "overview,tags";
+  format?: "html" | "xhtml" | "text" | "dekicode";
+  highlight?: string;
+  revision?: string;
+  mode: RequestModeQueryParam;
+  section?: string;
+} & BaseQueryParams;
+
+export type GetPagePropertiesParams = {
+  depth?: number;
+  name?: string;
+  contentcutoff?: number;
+} & BaseQueryParams;
+
+export type GetPageTagsParams = {
+  exports?: boolean;
+} & BaseQueryParams;
+
+export type GetPageTreeParams = {
+  startpage?: boolean;
+  format?: "html" | "xml" | "google";
+  include?: string;
+  authenticate?: boolean;
+};
+
+export type GetPagePopularParams = {
+  authenticate?: boolean;
+} & BaseQueryParams;
 
 export type GetPageResponse = PageBase & PageExtended;
 export type GetPageSecurityResponse = PageSecurity;
@@ -71,6 +124,98 @@ export type GetPageFilesResponse = {
   "@offset": string;
   "@href": string;
   file: PageFile | PageFile[];
+};
+export type GetPageExplainResponse = PageBase & PageExtended;
+export type GetPageInfoResponse = Omit<
+  PageBase,
+  "article" | "date.modified" | "security"
+>;
+
+export type GetPagesResponse = {
+  "@id": string;
+  "@guid": string;
+  "@draft.state": string;
+  "@href": string;
+  "@deleted": string;
+  "date.created": string;
+  language: string;
+  namespace: string;
+  path: PagePath & { "@type": string };
+  subpages: Subpages | "";
+};
+
+export type GetPageFileInfoResponse = {
+  "page.parent": GetPageInfoResponse;
+} & PageFile;
+
+export type GetPageFileRevisionsResponse = {
+  "@count": string;
+  "@href": string;
+  file:
+    | (PageFile & { "page.parent": GetPageInfoResponse; "user-action": string })
+    | (PageFile & {
+        "page.parent": GetPageInfoResponse;
+        "user-action": string;
+      })[];
+};
+
+export type GetPageContentsExplainResponse = {
+  "@elapsed": string;
+  "@id": string;
+  "@path": string;
+  "@version": string;
+  calls: object;
+  "data-stats": PageDataStats;
+  "db-summary": PageDbSummary;
+  "hs-summary": PageHsSummary;
+  "redis-summary": PageRedisSummary;
+};
+
+export type GetPagePropertiesResponse = {
+  "@count": string;
+  "@href": string;
+  property: PageProperty | PageProperty[];
+};
+
+export type GetPageTagsResponse = {
+  "@count": string;
+  "@href": string;
+  tag?: PageTag | PageTag[];
+};
+
+export type GetPageTreeResponse = {
+  page: Subpage;
+};
+
+export type GetPagePopularResponse = {
+  "@count": string;
+  "@href": string;
+  page: PageWithoutSubpages | PageWithoutSubpages[];
+};
+
+export type PageWithoutSubpages = Omit<Subpage, "subpages"> & {
+  metrics: {
+    "metric.views": string;
+  };
+};
+
+export type PageProperty = {
+  "@revision": string;
+  "@resid": string;
+  "@name": string;
+  "@href": string;
+  "@etag": string;
+  "@resource-is-deleted": string;
+  "@resource-rev-is-deleted": string;
+  "change-description": string;
+  contents: {
+    "@type": string;
+    "@size": string;
+    "@href": string;
+    "#text": string;
+  };
+  "date.modified": string;
+  "user.modified": ExpertUser;
 };
 
 export type PageBase = {
@@ -188,10 +333,60 @@ export type PageTag = {
   "@href": string;
   title: string;
   type: string;
-  url: string;
+  uri: string;
 };
 
 export type PagePath = {
   "@seo": string;
+  "@type"?: string;
   "#text": string;
+};
+
+export type Subpages = {
+  page: Subpage[] | Subpage;
+};
+
+export type Subpage = {
+  "@id": string;
+  "@guid": string;
+  "@draft.state": string;
+  "@href": string;
+  "@deleted": string;
+  "date.created": string;
+  language: string;
+  namespace: string;
+  path: PagePath;
+  subpages: Subpages | "";
+  title: string;
+  "uri.ui": string;
+};
+
+export type PageDataStats = {
+  entry: PageDataEntry | PageDataEntry[];
+};
+
+export type PageDataEntry = {
+  "@name": string;
+  "@value": string;
+};
+
+export type PageDbSummary = {
+  "@elapsed": string;
+  "@count": string;
+  query: PageSummaryQuery | PageSummaryQuery[];
+};
+
+export type PageHsSummary = PageDbSummary;
+
+export type PageRedisSummary = {
+  "@elapsed": string;
+  "@count": string;
+};
+
+export type PageSummaryQuery = {
+  "@name": string;
+  "@elapsed": string;
+  "@average": string;
+  "@max": string;
+  "@count": string;
 };
