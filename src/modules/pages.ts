@@ -21,6 +21,10 @@ import {
   GetPageFileInfoResponse,
   GetPageFileRevisionsParams,
   GetPageFileRevisionsResponse,
+  GetPageContentsExplainParams,
+  GetPageContentsExplainResponse,
+  GetPagePropertiesParams,
+  GetPagePropertiesResponse,
 } from "../types";
 import { getTld } from "../utils";
 import Auth from "./auth";
@@ -238,6 +242,46 @@ export default class Pages {
 
     const res = await requests.get<GetPageFileRevisionsResponse>(
       `/pages/${pageId}/files/${fileNameId}/revisions`,
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+    return res.data;
+  }
+
+  public async getPageContentsExplain(
+    id: string | number,
+    funcArgs: BaseArgs,
+    reqArgs?: GetPageContentsExplainParams
+  ) {
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.get<GetPageContentsExplainResponse>(
+      `/pages/${pageId}/contents/explain`,
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+    return res.data;
+  }
+
+  public async getPageContentsProperties(
+    id: string | number,
+    funcArgs: BaseArgs,
+    reqArgs?: GetPagePropertiesParams
+  ) {
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.get<GetPagePropertiesResponse>(
+      `/pages/${pageId}/properties`,
       {
         params: {
           ...reqArgs,

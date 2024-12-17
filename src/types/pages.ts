@@ -61,6 +61,26 @@ export type GetPageFileRevisionsParams = {
   changefilter?: string;
 } & BaseQueryParams;
 
+export type GetPageContentsExplainParams = {
+  overview?: boolean;
+  include?: string;
+  reltopath?: string;
+  relto?: number;
+  pageid?: number;
+  includes?: "overview" | "tags" | "overview,tags";
+  format?: "html" | "xhtml" | "text" | "dekicode";
+  highlight?: string;
+  revision?: string;
+  mode: RequestModeQueryParam;
+  section?: string;
+} & BaseQueryParams;
+
+export type GetPagePropertiesParams = {
+  depth?: number;
+  name?: string;
+  contentcutoff?: number;
+} & BaseQueryParams;
+
 export type GetPageResponse = PageBase & PageExtended;
 export type GetPageSecurityResponse = PageSecurity;
 
@@ -122,6 +142,43 @@ export type GetPageFileRevisionsResponse = {
         "page.parent": GetPageInfoResponse;
         "user-action": string;
       })[];
+};
+
+export type GetPageContentsExplainResponse = {
+  "@elapsed": string;
+  "@id": string;
+  "@path": string;
+  "@version": string;
+  calls: object;
+  "data-stats": PageDataStats;
+  "db-summary": PageDbSummary;
+  "hs-summary": PageHsSummary;
+  "redis-summary": PageRedisSummary;
+};
+
+export type GetPagePropertiesResponse = {
+  "@count": string;
+  "@href": string;
+  property: PageProperty | PageProperty[];
+};
+
+export type PageProperty = {
+  "@revision": string;
+  "@resid": string;
+  "@name": string;
+  "@href": string;
+  "@etag": string;
+  "@resource-is-deleted": string;
+  "@resource-rev-is-deleted": string;
+  "change-description": string;
+  contents: {
+    "@type": string;
+    "@size": string;
+    "@href": string;
+    "#text": string;
+  };
+  "date.modified": string;
+  "user.modified": ExpertUser;
 };
 
 export type PageBase = {
@@ -264,4 +321,34 @@ export type Subpage = {
   subpages: Subpages | "";
   title: string;
   "uri.ui": string;
+};
+
+export type PageDataStats = {
+  entry: PageDataEntry | PageDataEntry[];
+};
+
+export type PageDataEntry = {
+  "@name": string;
+  "@value": string;
+};
+
+export type PageDbSummary = {
+  "@elapsed": string;
+  "@count": string;
+  query: PageSummaryQuery | PageSummaryQuery[];
+};
+
+export type PageHsSummary = PageDbSummary;
+
+export type PageRedisSummary = {
+  "@elapsed": string;
+  "@count": string;
+};
+
+export type PageSummaryQuery = {
+  "@name": string;
+  "@elapsed": string;
+  "@average": string;
+  "@max": string;
+  "@count": string;
 };
