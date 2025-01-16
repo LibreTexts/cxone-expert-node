@@ -3,11 +3,12 @@ import auth from './modules/auth';
 import requests from './modules/requests';
 import { AuthObject, BaseArgs, BrowserTokenParams, ExpertGlobalOptions, ServerTokenParams } from './types';
 import Pages from './modules/pages';
-
+import Groups from './modules/pages';
 
 export default class Expert {
     private globals: ExpertGlobalOptions = {};
     private _pages?: Pages;
+    private _groups?: Groups;
     private _auth?: auth;
 
     constructor(tld?: string) {
@@ -31,5 +32,14 @@ export default class Expert {
 
         return this._auth;
     }
+
+    public get groups(): Groups {
+        if (!this._groups) {
+            this._groups = new Groups(this.globals);
+        }
+
+        return this._groups;
+    }
+
 
 }
