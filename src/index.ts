@@ -3,7 +3,7 @@ import auth from './modules/auth';
 import requests from './modules/requests';
 import { AuthObject, BaseArgs, BrowserTokenParams, ExpertGlobalOptions, ServerTokenParams } from './types';
 import Pages from './modules/pages';
-import Groups from './modules/pages';
+import Groups from './modules/groups';
 
 export default class Expert {
     private globals: ExpertGlobalOptions = {};
