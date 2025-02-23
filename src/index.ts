@@ -4,12 +4,14 @@ import requests from './modules/requests';
 import { AuthObject, BaseArgs, BrowserTokenParams, ExpertGlobalOptions, ServerTokenParams } from './types';
 import Pages from './modules/pages';
 import Groups from './modules/groups';
+import Archive from './modules/archive';
 
 export default class Expert {
     private globals: ExpertGlobalOptions = {};
     private _pages?: Pages;
     private _groups?: Groups;
     private _auth?: auth;
+    private _archive?: Archive;
 
     constructor(tld?: string) {
         if (tld) {
@@ -33,6 +35,14 @@ export default class Expert {
         return this._auth;
     }
 
+    public get archive(): Archive {
+        if (!this._archive) {
+            this._archive = new Archive(this.globals);
+        }
+
+        return this._archive;
+    }
+
     public get groups(): Groups {
         if (!this._groups) {
             this._groups = new Groups(this.globals);
@@ -40,6 +50,5 @@ export default class Expert {
 
         return this._groups;
     }
-
 
 }
