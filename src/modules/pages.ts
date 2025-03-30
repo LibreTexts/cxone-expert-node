@@ -29,8 +29,19 @@ import {
   GetPageTagsResponse,
   GetPageTreeParams,
   GetPageTreeResponse,
-  GetPagePopularParams,
-  GetPagePopularResponse,
+  GetPageRatingParams,
+  GetPageRatingResponse,
+  GetBookParams,
+  GetPopularParams,
+  GetPopularResponse,
+  GetRatingParams,
+  GetRatingResponse,
+  GetPageLinksParams,
+  GetPageLinksResponse,
+  GetPageFileParams,
+  GetPageFilesSubPagesParams,
+  GetPageFilesSubPagesResponse,
+  GetPagePdfParams
 } from "../types";
 import { getTld } from "../utils";
 import Auth from "./auth";
@@ -49,7 +60,7 @@ export default class Pages {
     if (typeof id === "number") {
       return id.toString();
     }
-    return `=${encodeURIComponent(id)}`;
+    return `=${encodeURIComponent(encodeURIComponent(id))}`;
   }
 
   private parseFileName(name: string) {
@@ -213,6 +224,29 @@ export default class Pages {
     return res.data;
   }
 
+  public async getPageFile(
+    id: string | number,
+    fileName: string,
+    funcArgs: BaseArgs,
+    reqArgs?: GetPageFileParams
+  ) {
+    const pageId = this.parsePageId(id);
+    const fileNameId = this.parseFileName(fileName);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.get(
+      `/pages/${pageId}/files/${fileNameId}`,
+      {
+        params: {
+          ...reqArgs,
+        },
+        responseType: "stream"
+      }
+    );
+    return res.data;
+  }
+
   public async getPageFileInfo(
     id: string | number,
     fileName: string,
@@ -257,6 +291,25 @@ export default class Pages {
     return res.data;
   }
 
+  public async getPageFilesSubPagesResponse(
+    id: string | number,
+    funcArgs: BaseArgs,
+    reqArgs?: GetPageFilesSubPagesParams
+  ) {
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.get<GetPageFilesSubPagesResponse>(
+      `/pages/${pageId}/files,subpages`,
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+    return res.data;
+  }
   public async getPageContentsExplain(
     id: string | number,
     funcArgs: BaseArgs,
@@ -272,6 +325,27 @@ export default class Pages {
         params: {
           ...reqArgs,
         },
+      }
+    );
+    return res.data;
+  }
+
+  public async getPagePdf(
+    id: string | number,
+    funcArgs: BaseArgs,
+    reqArgs?: GetPagePdfParams
+  ) {
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.get(
+      `/pages/${pageId}/pdf`,
+      {
+        params: {
+          ...reqArgs,
+        },
+        responseType: "stream"
       }
     );
     return res.data;
@@ -337,14 +411,104 @@ export default class Pages {
     return res.data;
   }
 
-  public async getPagePopular(
+  public async getPageLinks(
+    id: string | number,
     funcArgs: BaseArgs,
-    reqArgs?: GetPagePopularParams
+    reqArgs?: GetPageLinksParams
+  ) {
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.get<GetPageLinksResponse>(
+      `/pages/${pageId}/links`,
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+    return res.data;
+  }
+
+  public async getBook(
+    funcArgs: BaseArgs,
+    reqArgs?: GetBookParams
   ) {
     const tld = getTld(this.globals, funcArgs.tld);
     const requests = new Requests(tld, funcArgs.auth);
 
-    const res = await requests.get<GetPagePopularResponse>(`/pages/popular`, {
+    const res = await requests.get(
+      `/pages/book`,
+      {
+        params: {
+          ...reqArgs,
+        },
+        responseType: "stream"
+      }
+    );
+    return res.data;
+  }
+
+  public async getCsv(
+    funcArgs: BaseArgs,
+    reqArgs?: GetBookParams
+  ) {
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.get(
+      `/pages/csv`,
+      {
+        params: {
+          ...reqArgs,
+        },
+        responseType: "stream"
+      }
+    );
+    return res.data;
+  }
+
+  public async getPageRating(
+    id: string | number,
+    funcArgs: BaseArgs,
+    reqArgs?: GetPageRatingParams
+  ) {
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.get<GetPageRatingResponse>(`/pages/${pageId}/ratings`, {
+      params: {
+        ...reqArgs,
+      },
+    });
+    return res.data;
+  }
+
+  public async getPopular(
+    funcArgs: BaseArgs,
+    reqArgs?: GetPopularParams
+  ) {
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.get<GetPopularResponse>(`/pages/popular`, {
+      params: {
+        ...reqArgs,
+      },
+    });
+    return res.data;
+  }
+
+  public async getRatings(
+    funcArgs: BaseArgs,
+    reqArgs?: GetRatingParams
+  ) {
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.get<GetRatingResponse>(`/pages/ratings`, {
       params: {
         ...reqArgs,
       },
