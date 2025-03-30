@@ -92,9 +92,47 @@ export type GetPageTreeParams = {
   authenticate?: boolean;
 };
 
-export type GetPagePopularParams = {
+export type GetPopularParams = {
   authenticate?: boolean;
 } & BaseQueryParams;
+
+export type GetPageRatingParams = BaseQueryParams;
+
+export type GetBookParams = {
+  format?: "html" | "pdf";
+  title?: string;
+  showtoc?: boolean;
+  authenticate?: boolean;
+  stylesheet?: string;
+  pageids?: number;
+  filename?: string;
+}
+
+export type GetPageLinksParams = {
+  dir: string;
+} & BaseQueryParams;
+
+export type GetRatingParams = {
+  authenticate?: boolean;
+  pageids?: number;
+};
+
+export type GetPageFileParams = {
+  includeDeleted?: boolean;
+  revision?: string;
+  size?: "original" | "thumb" | "webview" | "bestfit" | "custom";
+  format?: "jpg" | "png" | "bmp" | "gif";
+  ratio?: "fixed" | "var";
+  width?: number;
+  height?: number;
+} & BaseQueryParams;
+
+export type GetPageFilesSubPagesParams = BaseQueryParams;
+
+export type GetPagePdfParams = {
+  filename?: string;
+  pageid: string;
+}
 
 export type GetPageResponse = PageBase & PageExtended;
 export type GetPageSecurityResponse = PageSecurity;
@@ -148,6 +186,30 @@ export type GetPageFileInfoResponse = {
   "page.parent": GetPageInfoResponse;
 } & PageFile;
 
+export type GetPageFilesSubPagesResponse = {
+  "@id": string;
+  "@guid": string;
+  "@draft.state": string;
+  "@href": string;
+  "@deleted": string;
+  "date.created": string;
+  files: {
+    "@count": string;
+    file?: GetPageFileInfoResponse | GetPageFileInfoResponse[];
+  }
+  language: string;
+  namespace: string;
+  path: PagePath;
+  subpages: {
+    "@totalcount": string;
+    "@count": string;
+    "@href": string;
+    "page.subpage"?: PageBase | PageBase[];
+  }
+  title: string;
+  "uri.ui": string;
+}
+
 export type GetPageFileRevisionsResponse = {
   "@count": string;
   "@href": string;
@@ -187,11 +249,36 @@ export type GetPageTreeResponse = {
   page: Subpage;
 };
 
-export type GetPagePopularResponse = {
+export type GetPageLinksResponse = {
+  "@count": string;
+  page?: Omit<Subpage, "subpages"> | Omit<Subpage, "subpages">[];
+};
+
+export type GetPageRatingResponse = {
+  "@score": string;
+  "@count": string;
+  "@seated.score": string;
+  "@seated.count": string;
+  "@unseated.score": string;
+  "@unseated.count": string;
+  "@anonymous.score": string;
+  "@anonymous.count": string;
+}
+
+export type GetPopularResponse = {
   "@count": string;
   "@href": string;
   page: PageWithoutSubpages | PageWithoutSubpages[];
 };
+
+export type GetPageLinkResponse = {
+  "@count": string;
+}
+
+export type GetRatingResponse = {
+  "@href": string;
+  "@count": string;
+}
 
 export type PageWithoutSubpages = Omit<Subpage, "subpages"> & {
   metrics: {
