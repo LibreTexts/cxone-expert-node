@@ -10,11 +10,15 @@ export default class Auth {
     }
 
     public ServerToken({ key, secret, user }: ServerTokenParams) {
-        const hmac = createHmac('sha256', secret);
+        if(!key || !secret || !user) {
+            throw new Error("Missing required parameters: key, secret, user");
+        }
+        
         const epoch = Math.floor(Date.now() / 1000);
-        hmac.update(`${key}_${epoch}_${user}`);
+        const hmac = createHmac('sha256', secret);
+        hmac.update(`${key}${epoch}=${user}`);
         const hash = hmac.digest('hex');
-        this.token = `tkn_${key}_${epoch}_${user}_${hash}`;
+        this.token = `${key}_${epoch}_=${user}_${hash}`;
         return this;
     }
 
