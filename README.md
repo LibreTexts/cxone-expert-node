@@ -11,15 +11,15 @@ npm install @libretexts/cxone-expert-node
 ```
 import Expert from "@libretexts/cxone-expert-node";
 
-const tld = "mysite.example.com"; // Your CXone site domain
+const tld = process.env.SERVER_DOMAIN; // Your CXone site domain
 
 const expert = new Expert(tld);
 
 // Authenticate using server credentials
 const authInstance = await expert.auth.ServerToken({
-  key: "mykey",
-  secret: "mysecret",
-  user: "myuser",
+  key: proccess.env.SERVER_KEY,
+  secret: process.env.SERVER_SECRET,
+  user: process.env.SERVER_USER,
 });
 
 // Or, use auth.BrowserToken() to use a CXone provided JWT (not intended for production use)
