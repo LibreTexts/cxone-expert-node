@@ -5,11 +5,14 @@ import { AuthObject, BaseArgs, BrowserTokenParams, ExpertGlobalOptions, ServerTo
 import Pages from './modules/pages';
 import Groups from './modules/groups';
 import Archive from './modules/archive';
+import Site from './modules/site';
+
 
 export default class Expert {
     private globals: ExpertGlobalOptions = {};
     private _pages?: Pages;
     private _groups?: Groups;
+    private _site?: Site;
     private _auth?: auth;
     private _archive?: Archive;
 
@@ -33,6 +36,14 @@ export default class Expert {
         }
 
         return this._auth;
+    }
+
+    public get site(): Site {
+        if (!this._site) {
+            this._site = new Site(this.globals);
+        }
+
+        return this._site;
     }
 
     public get archive(): Archive {
