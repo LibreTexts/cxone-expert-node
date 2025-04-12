@@ -6,6 +6,7 @@ import Pages from './modules/pages';
 import Groups from './modules/groups';
 import Archive from './modules/archive';
 import Site from './modules/site';
+import contextMaps from './modules/contextMaps';
 
 
 export default class Expert {
