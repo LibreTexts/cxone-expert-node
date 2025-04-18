@@ -9,6 +9,8 @@ export * from './archive';
 export * from './events';
 export * from './site';
 export * from './contextMaps';
+export * from './users';
+export * from './files';
 
 export type BaseArgs = {
     auth: AuthObject;
