@@ -3,6 +3,7 @@ import {
     PaginationQueryParams,
     RequestModeQueryParam,
   } from "./requests";
+  import { ExpertUser, PageSecurity } from "./security";
 
 export type GetGroupsParams = {
     authProvider?: number;
@@ -32,7 +33,7 @@ export type GetGroupsResponse = {
     "@count": string;
     "@querycount": string;
     "@href": string;
-    "group": Group | Group[];
+    "group": Partial<Group> | Partial<Group>[];
 };
 
 export type GetGroupResponse = Group;
@@ -41,7 +42,7 @@ export type GetGroupUserResponse = {
     "@count": string;
     "@querycount": string;
     "@href": string;
-    "user": GroupUser | GroupUser[]
+    "user": Partial<ExpertUser> | Partial<ExpertUser>[] | "";
 };
 
 export type Group = {
@@ -70,27 +71,4 @@ export type GroupPermissions = {
         "@href": string;
         "#text": string;
     };
-};
-
-export type GroupUser = {
-    "@anonymous": string;
-    "@virtual": string;
-    "@id": string;
-    "@wikiid": string;
-    "@href": string;
-    "@guid": string;
-    "date.created": string;
-    "date.lastlogin": string;
-    "email": string;
-    "fullname": string;
-    "hash.email": string;
-    "license.seat": string;
-    "nick": string;
-    "password": {
-        "@exists": string;
-    }
-    "status": string;
-    "uri.avatar": string;
-    "uri.gravatar": string;
-    "username": string;
 };

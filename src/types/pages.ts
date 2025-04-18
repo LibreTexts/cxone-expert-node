@@ -261,16 +261,7 @@ export type GetPagePropertiesKeyInfoResponse = Partial<PageProperty> | Partial<P
 
 export type GetPageRatingsParams = BaseQueryParams;
 
-export type GetPageRatingsResponse = {
-  "@score"?: string;
-  "@count"?: string;
-  "@seated.score"?: string;
-  "@seated.count"?: string;
-  "@unseated.score"?: string;
-  "@unseated.count"?: string;
-  "@anonymous.score"?: string;
-  "@anonymous.count"?: string;
-}
+export type GetPageRatingsResponse = PageRating;
 
 export type GetPageRevisionsParams = {
   revision?: string;
@@ -490,6 +481,10 @@ export type Contents = {
   "@width": string;
   "@height": string;
   "@href": string;
+  "#text": string;
+  properties: {
+    property: Partial<PageProperty> | Partial<PageProperty>[] | "";
+  } | "";
 }
 
 export type ContentsPreview = {
