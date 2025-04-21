@@ -52,7 +52,19 @@ import {
   GetPageBookFilenameParams,
   GetPagesCsvParams,
   GetPagesPopularParams,
-  GetPagesPopularResponse
+  GetPagesPopularResponse,
+  PostPageContentsParams, 
+  PostPageContentsResponse,
+  DeletePageParams,
+  DeletePageResponse,
+  PostPageAllowedParams,
+  PostPageAllowedResponse,
+  PostCopyPageParams,
+  PostCopyPageResponse,
+  DeletePageFileNameParams,
+  HeadPageFileNameParams,
+  DeletePageFileNameDescriptionParams,
+  DeletePageFileNameDescriptionResponse
 } from "../types";
 import { getTld } from "../utils";
 import Auth from "./auth";
@@ -636,4 +648,219 @@ export default class Pages {
     return res.data;
   }
   
+  public async postPageContents(
+    id: string | number,
+    funcArgs: BaseArgs,
+    content?: string, 
+    reqArgs?: PostPageContentsParams
+  ) {
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+  
+    const res = await requests.post<PostPageContentsResponse>(
+      `/pages/${pageId}/contents`,
+      content ?? "", 
+      {
+        headers: {
+          "Content-Type": "text/plain",
+        },
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+    return res.data;
+  }
+
+  public async putPageUnorder(
+    id: string | number,
+    funcArgs: BaseArgs
+  ) {
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+  
+    const res = await requests.put(
+      `/pages/${pageId}/unorder`,
+      ""
+    );
+  
+    return res.data;
+  }
+
+  public async delPageDelete(
+    id: string | number,
+    funcArgs: BaseArgs,
+    reqArgs?: DeletePageParams
+  ) {
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+  
+    const res = await requests.del<DeletePageResponse>(
+      `/pages/${pageId}`,
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+  
+    return res.data;
+  }
+
+  public async delPageAllowed(
+    id: string | number,
+    funcArgs: BaseArgs,
+    reqArgs?: PostPageAllowedParams
+  ) {
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+  
+    const res = await requests.del<PostPageAllowedResponse>(
+      `/pages/${pageId}/allowed`,
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+  
+    return res.data;
+  }
+
+  public async postPageCopied(
+    id: string | number,
+    funcArgs: BaseArgs,
+    reqArgs?: PostCopyPageParams
+  ) {
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+  
+    const res = await requests.post<PostCopyPageResponse>(
+      `/pages/${pageId}/copy`,
+      "",
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+  
+    return res.data;
+  }
+
+  public async postPageExport(
+    id: string | number,
+    funcArgs: BaseArgs
+  ){
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+  
+    const res = await requests.post(
+      `/pages/${pageId}/export`,
+      "",
+    );
+  
+    return res.data;
+  }
+
+  public async delPageFileName(
+    id: string | number,
+    filename: string,
+    funcArgs: BaseArgs,
+    reqArgs?: DeletePageFileNameParams
+  ){
+    const pageId = this.parsePageId(id);
+    const filenameId = this.parseFileName(filename);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+  
+    const res = await requests.del(
+      `/pages/${pageId}/files/${filenameId}`,
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+  
+    return res.data;
+  }
+
+  public async headPageFileName(
+    id: string | number,
+    filename: string,
+    funcArgs: BaseArgs,
+    reqArgs?: HeadPageFileNameParams
+  ){
+    const pageId = this.parsePageId(id);
+    const filenameId = this.parseFileName(filename);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+  
+    const res = await requests.head(
+      `/pages/${pageId}/files/${filenameId}`,
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+  
+    return res.data;
+  }
+
+  public async putPageFileName(
+    id: string | number,
+    filename: string,
+    funcArgs: BaseArgs,
+    reqArgs?: HeadPageFileNameParams
+  ){
+    const pageId = this.parsePageId(id);
+    const filenameId = this.parseFileName(filename);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+  
+    const res = await requests.put(
+      `/pages/${pageId}/files/${filenameId}`,
+      "",
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+  
+    return res.data;
+  }
+
+  public async delPageFileNameDescription(
+    id: string | number,
+    filename: string,
+    funcArgs: BaseArgs,
+    reqArgs?: DeletePageFileNameDescriptionParams
+  ){
+    const pageId = this.parsePageId(id);
+    const filenameId = this.parseFileName(filename);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+  
+    const res = await requests.put<DeletePageFileNameDescriptionResponse>(
+      `/pages/${pageId}/files/${filenameId}`,
+      "",
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+  
+    return res.data;
+  }
+
 }

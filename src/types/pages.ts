@@ -322,6 +322,137 @@ export type GetPagesPopularResponse = {
   page?: (Partial<PageBase> & Partial<PageExtended>) | (Partial<PageBase> & Partial<PageExtended>)[] | "";
 }
 
+export type PostPageContentsParams = {
+  ordered?: boolean;
+  restriction?: string;
+  importtime?: string;
+  overwrite?: boolean;
+  reltopath?: string;
+  relto?: number;
+  abort?: "never" | "modified" | "exists";
+  xpath?: string;
+  section?: number;
+  title?: string;
+  comment?: string;
+  edittime: string; 
+  authenticate?: boolean;
+  redirects?: number;
+  tidy?: "remove" | "convert";
+}
+
+export type PostPageContentsResponse = {
+  edit: {
+    "@status": "success" | "conflict";
+    page: {
+      "@id": number;
+      "@href": string;
+      title: string;
+      path: string;
+    };
+    "page.base": {
+      "@id": number;
+      "@revision": number;
+      "@href": string;
+      title: string;
+      path: string;
+      "date.edited": string;
+      "user.author": {
+        "@id": number;
+        "@href": string;
+        nick: string;
+        username: string;
+        email: string;
+      };
+      description: string;
+      contents: {
+        "@type": string;
+        "@href": string;
+      };
+    };
+    "page.overwritten"?: {
+      "@id": number;
+      "@revision": number;
+      "@href": string;
+      title: string;
+      path: string;
+      "date.edited": string;
+      "user.author": {
+        "@id": number;
+        "@href": string;
+        nick: string;
+        username: string;
+        email: string;
+      };
+      description: string;
+      contents: {
+        "@type": string;
+        "@href": string;
+      };
+    };
+  };
+}
+
+export type DeletePageParams = {
+  recursive?: boolean;
+} & BaseQueryParams;
+
+export type DeletePageResponse = {
+  deletedPages?: {
+    "@count"?: number;
+    page: Partial<DeletedPage> | Partial<DeletedPage>[] | "";
+  }
+}
+
+export type PostPageAllowedParams = {
+  permissions?: string;
+}
+
+export type PostPageAllowedResponse = {
+  users?: {
+    user: Partial<Allowed> | Partial<Allowed>[] | "";
+  }
+}
+
+export type PostCopyPageParams = {
+  to: string; 
+  title?: string;
+  abort?: 'never' | 'exists';
+  recursive?: boolean;
+  tags?: boolean;
+  attachments?: boolean;
+} & BaseQueryParams;
+
+export type PostCopyPageResponse = {
+  'pages.copied?': {
+    "@count"?: string;
+    page?: Partial<PageBase> | Partial<PageBase>[] | "";
+  } | "";
+}
+
+export type DeletePageFileNameParams = BaseQueryParams;
+
+export type HeadPageFileNameParams = {
+  includeDeleted?: boolean;
+  revision?: string;
+  size?: "original" | "thumb" | "webview" | "bestfit" | "custom";
+  format?: "jpg" | "png" | "bmp" | "gif";
+  ratio?: "fixed" | "var";
+  width?: number;
+  height: number;
+} & BaseQueryParams;
+
+export type DeletePageFileNameDescriptionParams = BaseQueryParams;
+
+export type DeletePageFileNameDescriptionResponse = {
+  file?: Partial<PageFile> & {
+    properties?: {
+      "@count"?: string;
+      "@href"?: string;
+      property?: Partial<PageProperty> | Partial<PageProperty>[] | "";
+    }
+  };
+}
+
 
 export type PagePath = {
   "@seo": string;
@@ -606,4 +737,15 @@ export type Query = {
   "@average": string;
   "@max": string;
   "@count": string;
+}
+
+export type DeletedPage = {
+  "@id": number;
+  "@href": string;
+  title: string;
+  path: string;
+}
+
+export type Allowed = {
+  "@id": string;
 }
