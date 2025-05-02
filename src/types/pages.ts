@@ -317,8 +317,8 @@ export type GetPagesCsvParams = {
 export type GetPagesPopularParams = BaseQueryParams & PaginationQueryParams;
 
 export type GetPagesPopularResponse = {
-  "@count": string;
-  "@href": string;
+  "@count"?: string;
+  "@href"?: string;
   page?: (Partial<PageBase> & Partial<PageExtended>) | (Partial<PageBase> & Partial<PageExtended>)[] | "";
 }
 
@@ -399,7 +399,7 @@ export type DeletePageParams = {
 export type DeletePageResponse = {
   deletedPages?: {
     "@count"?: number;
-    page: Partial<DeletedPage> | Partial<DeletedPage>[] | "";
+    page?: Partial<DeletedPage> | Partial<DeletedPage>[] | "";
   }
 }
 
@@ -438,21 +438,123 @@ export type HeadPageFileNameParams = {
   format?: "jpg" | "png" | "bmp" | "gif";
   ratio?: "fixed" | "var";
   width?: number;
-  height: number;
+  height?: number;
 } & BaseQueryParams;
+
+export type PutPageFileNameParams = {
+  description?: string;
+} & BaseQueryParams;
+
+export type PutPageFileNameResponse = Partial<PageFile>;
 
 export type DeletePageFileNameDescriptionParams = BaseQueryParams;
 
-export type DeletePageFileNameDescriptionResponse = {
-  file?: Partial<PageFile> & {
+export type DeletePageFileNameDescriptionResponse = Partial<PageFile> & {
     properties?: {
       "@count"?: string;
       "@href"?: string;
       property?: Partial<PageProperty> | Partial<PageProperty>[] | "";
     }
   };
+
+
+export type PutPageFileNameDescriptionParams = BaseQueryParams;
+
+export type PutPageFileNameDescriptionResponse = Partial<PageFile> & {
+    properties?: {
+      "@count"?: string;
+      "@href"?: string;
+      property?: Partial<PageProperty> | Partial<PageProperty>[] | "";
+    }
+  };
+
+
+export type PutPageFileNamePropertiesKeyParams = {
+  description?: string;
+  etag?: string;
+  abort?: "never" | "modified" | "exists";
+} & BaseQueryParams;
+
+export type PutPageFileNamePropertiesKeyResponse = PageProperty;
+
+export type PutPageImportParams = {
+  behavior?: "sync" | "async";
+  filename?: string;
+  pageid?: number;
 }
 
+export type PutPageMoveParams = {
+  parentid?: number;
+  name?: string;
+  title?: string;
+  to?: string;
+} & BaseQueryParams;
+
+export type PutPageMoveResponse = {
+  "page.moved?": {
+    "@count"?: string;
+    page?: Partial<PageBase> | Partial<PageBase>[] | "";
+  } | "";
+};
+
+export type PutPageOrderParams = {
+  afterid?: number;
+};
+
+export type PostPagePropertiesParams = {
+  abort?: "never" | "modified" | "exists";
+  description?: string;
+}  & BaseQueryParams;
+
+export type PostPagePropertiesResponse = PageProperty;
+
+export type PutPagePropertiesParams = BaseQueryParams;
+
+export type PutPagePropertiesResponse = {
+  properties?: {
+    "@count"?: string;
+    "@href"?: string;
+    property?: Partial<PageProperty> | Partial<PageProperty>[] | "";
+  }
+};
+
+export type DeletePagePropertiesKeyParams = BaseQueryParams;
+
+export type PutPagePropertiesKeyParams = {
+  abort?: "never" | "modified" | "exists";
+  description?: string;
+  etag?: string;
+} & BaseQueryParams;
+
+export type PutPagePropertiesKeyResponse = PageProperty;
+
+export type PostPageRatingsParams = {
+  score: number;
+} & BaseQueryParams;
+
+export type PostPageRevertParams = {
+  verbose?: boolean;
+  abort?: "never" | "conflict";
+  fromrevision?: string;
+} & BaseQueryParams;
+
+export type DeletePageSecurityParams = BaseQueryParams;
+
+export type PostPageSecurityParams = {
+  cascade?: "none" | "delta";
+} & BaseQueryParams;
+
+export type PostPageSecurityResponse = Partial<PageSecurity>;
+
+export type PutPageSecurityParams = {
+  cascade?: "none" | "delta" | "absolute";
+} & BaseQueryParams;
+
+export type PutPageSecurityResponse = Partial<PageSecurity>;
+
+export type PutPageTagsParams = BaseQueryParams;
+
+export type PutPageTagsResponse = Partial<Tags>;
 
 export type PagePath = {
   "@seo": string;
@@ -604,6 +706,10 @@ export type PageTag = {
   title: string;
   type: string;
   uri: string;
+  related: {
+    "@count"?: string;
+    page?: Partial<PageBase> | Partial<PageBase>[] | "";
+  } | "";
 };
 
 export type Contents = {
