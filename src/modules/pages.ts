@@ -63,12 +63,40 @@ import {
   PostCopyPageResponse,
   DeletePageFileNameParams,
   HeadPageFileNameParams,
+  PutPageFileNameParams,
+  PutPageFileNameResponse,
   DeletePageFileNameDescriptionParams,
-  DeletePageFileNameDescriptionResponse
+  DeletePageFileNameDescriptionResponse,
+  PutPageFileNameDescriptionParams,
+  PutPageFileNameDescriptionResponse,
+  PutPageFileNamePropertiesKeyParams,
+  PutPageFileNamePropertiesKeyResponse,
+  PutPageImportParams,
+  PutPageMoveParams,
+  PutPageMoveResponse,
+  PutPageOrderParams,
+  PostPagePropertiesParams,
+  PostPagePropertiesResponse,
+  PutPagePropertiesParams,
+  PutPagePropertiesResponse,
+  DeletePagePropertiesKeyParams,
+  PutPagePropertiesKeyParams,
+  PutPagePropertiesKeyResponse,
+  PostPageRatingsParams,
+  PostPageRevertParams,
+  DeletePageSecurityParams,
+  PostPageSecurityParams,
+  PostPageSecurityResponse,
+  PutPageSecurityParams,
+  PutPageSecurityResponse,
+  PutPageTagsParams,
+  PutPageTagsResponse
 } from "../types";
 import { getTld } from "../utils";
 import Auth from "./auth";
 import Requests from "./requests";
+import { Buffer } from 'buffer';
+import type { Readable } from 'stream';
 
 export default class Pages {
   private globals: ExpertGlobalOptions;
@@ -818,27 +846,31 @@ export default class Pages {
   public async putPageFileName(
     id: string | number,
     filename: string,
+    file: Buffer | NodeJS.ReadableStream, 
     funcArgs: BaseArgs,
-    reqArgs?: HeadPageFileNameParams
+    reqArgs?: PutPageFileNameParams
   ){
     const pageId = this.parsePageId(id);
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs.tld);
     const requests = new Requests(tld, funcArgs.auth);
-  
-    const res = await requests.put(
+
+    const res = await requests.put<PutPageFileNameResponse>(
       `/pages/${pageId}/files/${filenameId}`,
-      "",
+      file,
       {
+        headers: {
+          "Content-Type": "application/octet-stream",
+        },
         params: {
           ...reqArgs,
         },
       }
     );
-  
     return res.data;
   }
 
+  
   public async delPageFileNameDescription(
     id: string | number,
     filename: string,
@@ -850,8 +882,56 @@ export default class Pages {
     const tld = getTld(this.globals, funcArgs.tld);
     const requests = new Requests(tld, funcArgs.auth);
   
-    const res = await requests.put<DeletePageFileNameDescriptionResponse>(
-      `/pages/${pageId}/files/${filenameId}`,
+    const res = await requests.del<DeletePageFileNameDescriptionResponse>(
+      `/pages/${pageId}/files/${filenameId}/description`,
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+  
+    return res.data;
+  }
+
+  public async putPageFileNameDescription(
+    id: string | number,
+    filename: string,
+    funcArgs: BaseArgs,
+    reqArgs?: PutPageFileNameDescriptionParams
+  ){
+    const pageId = this.parsePageId(id);
+    const filenameId = this.parseFileName(filename);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+  
+    const res = await requests.put<PutPageFileNameDescriptionResponse>(
+      `/pages/${pageId}/files/${filenameId}/description`,
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+  
+    return res.data;
+  }
+
+  public async putPageFileNamePropertiesKey(
+    id: string | number,
+    filename: string,
+    key: string,
+    funcArgs: BaseArgs,
+    reqArgs?: PutPageFileNamePropertiesKeyParams
+  ){
+    const pageId = this.parsePageId(id);
+    const filenameId = this.parseFileName(filename);
+    const keyId = this.parseKey(key);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+  
+    const res = await requests.put<PutPageFileNamePropertiesKeyResponse>(
+      `/pages/${pageId}/files/${filenameId}/properties/${keyId}`,
       "",
       {
         params: {
@@ -863,4 +943,294 @@ export default class Pages {
     return res.data;
   }
 
+  public async putPageImport(
+    id: string | number,
+    funcArgs: BaseArgs,
+    reqArgs?: PutPageImportParams
+  ){
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.put(
+      `/pages/${pageId}/import`,
+      "",
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+
+    return res.data;
+  }
+
+  public async putPageMove(
+    id: string | number,
+    funcArgs: BaseArgs,
+    reqArgs?: PutPageMoveParams
+  ){
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.put<PutPageMoveResponse>(
+      `/pages/${pageId}/move`,
+      "",
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+
+    return res.data;
+  }
+
+  public async putPageOrder(
+    id: string | number,
+    funcArgs: BaseArgs,
+    reqArgs?: PutPageOrderParams
+  ){
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.put(
+      `/pages/${pageId}/order`,
+      "",
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+
+    return res.data;
+  }
+
+  public async postPageProperties(
+    id: string | number,
+    funcArgs: BaseArgs,
+    reqArgs?: PostPagePropertiesParams
+  ){
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.post<PostPagePropertiesResponse>(
+      `/pages/${pageId}/properties`,
+      "",
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+
+    return res.data;
+  }
+
+  public async putPageProperties(
+    id: string | number,
+    funcArgs: BaseArgs,
+    reqArgs?: PutPagePropertiesParams
+  ){
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.put<PutPagePropertiesResponse>(
+      `/pages/${pageId}/properties`,
+      "",
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+
+    return res.data;
+  }
+
+  public async deletePagePropertiesKey(
+    id: string | number,
+    key: string,
+    funcArgs: BaseArgs,
+    reqArgs?: DeletePagePropertiesKeyParams
+  ){
+    const pageId = this.parsePageId(id);
+    const keyId = this.parseKey(key);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.del(
+      `/pages/${pageId}/properties/${keyId}`,
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+
+    return res.data;
+  }
+
+  public async putPagePropertiesKey(
+    id: string | number,
+    key: string,
+    funcArgs: BaseArgs,
+    reqArgs?: PutPagePropertiesKeyParams
+  ){
+    const pageId = this.parsePageId(id);
+    const keyId = this.parseKey(key);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.put<PutPagePropertiesKeyResponse>(
+      `/pages/${pageId}/properties/${keyId}`,
+      "",
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+
+    return res.data;
+  }
+
+  public async postPageRatings(
+    id: string | number,
+    funcArgs: BaseArgs,
+    reqArgs?: PostPageRatingsParams
+  ){
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.post(
+      `/pages/${pageId}/ratings`,
+      "",
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+
+    return res.data;
+  }
+
+  public async postPageRevert(
+    id: string | number,
+    funcArgs: BaseArgs,
+    reqArgs?: PostPageRevertParams
+  ){
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.post(
+      `/pages/${pageId}/revert`,
+      "",
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+
+    return res.data;
+  }
+
+  public async deletePageSecurity(
+    id: string | number,
+    funcArgs: BaseArgs,
+    reqArgs?: DeletePageSecurityParams
+  ){
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.del(
+      `/pages/${pageId}/security`,
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+
+    return res.data;
+  }
+
+  public async postPageSecurity(
+    id: string | number,
+    funcArgs: BaseArgs,
+    content?: string,
+    reqArgs?: PostPageSecurityParams
+  ){
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.post<PostPageSecurityResponse>(
+      `/pages/${pageId}/security`,
+      content,
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+
+    return res.data;
+  }
+
+  public async putPageSecurity(
+    id: string | number,
+    funcArgs: BaseArgs,
+    content?: string,
+    reqArgs?: PutPageSecurityParams
+  ){
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.put<PutPageSecurityResponse>(
+      `/pages/${pageId}/security`,
+      content,
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+
+    return res.data;
+  }
+
+  public async putPageTags(
+    id: string | number,
+    funcArgs: BaseArgs,
+    content?: string,
+    reqArgs?: PutPageTagsParams
+  ){
+    const pageId = this.parsePageId(id);
+    const tld = getTld(this.globals, funcArgs.tld);
+    const requests = new Requests(tld, funcArgs.auth);
+
+    const res = await requests.put<PutPageTagsResponse>(
+      `/pages/${pageId}/tags`,
+      content,
+      {
+        params: {
+          ...reqArgs,
+        },
+      }
+    );
+
+    return res.data;
+  }
 }
