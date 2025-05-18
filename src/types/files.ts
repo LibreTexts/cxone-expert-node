@@ -4,7 +4,7 @@ import {
     RequestModeQueryParam,
   } from "./requests";
   import { ExpertUser, PageSecurity } from "./security";
-  import { PageFile } from "./pages";
+  import { PageFile, DeletePageFileNameDescriptionResponse } from "./pages";
 
 export type GetFileParams = {
     includeDeleted?: boolean;
@@ -50,3 +50,38 @@ export type GetFileRevisionsResponse = {
     "@href": string;
     file: Partial<PageFile> | Partial<PageFile>[] | "";
 }
+
+export type DeleteFileParams = BaseQueryParams;
+
+export type HeadFileParams = {
+    includeDeleted?: boolean;
+    revision?: string;
+    size?: "original" | "thumb" | "webview" | "bestfit" | "custom";
+    format?: "jpg" | "png" | "bmp" | "gif";
+    ratio?: "fixed"| "var";
+    width?: number;
+    height: number;
+} & BaseQueryParams;
+
+export type PutFileParams = {
+    description?: string;
+} & BaseQueryParams;
+
+export type PutFileResponse = DeletePageFileNameDescriptionResponse;
+
+export type DeleteFileNameParams = BaseQueryParams;
+
+export type HeadFileNameParams = HeadFileParams;
+
+export type PutFileNameParams = PutFileParams;
+
+export type PostFileCopyParams = {
+    name?: string;
+    to?: string;
+} & BaseQueryParams;
+
+export type PostFileCopyResponse = PageFile;
+
+export type DelDescriptionFileParams = BaseQueryParams;
+
+export type DelDescriptionFileResponse = DeletePageFileNameDescriptionResponse;
