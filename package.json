@@ -11,7 +11,7 @@
   "author": "LibreTexts, Inc.",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^22.2.0",
+    "@types/node": "^22.15.3",
     "dotenv": "^16.4.5",
     "tsx": "^4.17.0",
     "typescript": "^5.5.4"
