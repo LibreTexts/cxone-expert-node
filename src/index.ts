@@ -9,6 +9,7 @@ import Archive from './modules/archive';
 import Site from './modules/site';
 import contextMaps from './modules/contextMaps';
 
+export * from './types/index';
 
 export default class Expert {
     private globals: ExpertGlobalOptions = {};
