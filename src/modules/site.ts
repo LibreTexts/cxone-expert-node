@@ -43,7 +43,7 @@ export default class Site {
   }
 
   private parseKey(key: string) {
-    return encodeURIComponent(key);
+    return encodeURIComponent(encodeURIComponent(key));
   }
 
   public async getSiteActivity(

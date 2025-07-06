@@ -5,7 +5,20 @@ export type ExpertUser = {
     '@wikiid': string;
     '@href': string;
     '@guid': string;
+    'date.created': string;
+    'date.lastlogin': string;
+    email: string;
+    fullname: string;
+    "hash.email": string;
+    "license.seat": string;
     nick: string;
+    password: {
+        "@exists": string
+    } | "";
+    status: string;
+    timezone: string;
+    "uri.avatar": string;
+    "uri.gravatar": string
     username: string | '#RESTRICTED'
 }
 

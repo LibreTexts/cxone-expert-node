@@ -222,7 +222,7 @@ export type groupsBody = {
     group: Partial<groupBody> | Partial<groupBody>[];
 }
 
-export type userBody = {
+type userBody = {
     "@anonymous": string;
     "@virtual": string;
     "date.created": string;

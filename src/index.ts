@@ -8,6 +8,8 @@ import Events from './modules/events';
 import Archive from './modules/archive';
 import Site from './modules/site';
 import contextMaps from './modules/contextMaps';
+import Users from './modules/users';
+import Files from './modules/files';
 
 export * from './types/index';
 
@@ -20,6 +22,8 @@ export default class Expert {
     private _archive?: Archive;
     private _events?: Events;
     private _contextMaps?: contextMaps;
+    private _users?: Users;
+    private _files?: Files;
 
     constructor(tld?: string) {
         if (tld) {
@@ -80,6 +84,22 @@ export default class Expert {
             this._contextMaps = new contextMaps(this.globals);
         }
         return this._contextMaps;
+    }
+
+    public get users(): Users {
+        if (!this._users) {
+            this._users = new Users(this.globals);
+        }
+
+        return this._users;
+    }
+
+    public get files(): Files {
+        if (!this._files) {
+            this._files = new Files(this.globals);
+        }
+
+        return this._files;
     }
 
 }
