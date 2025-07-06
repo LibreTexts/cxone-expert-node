@@ -7,6 +7,7 @@ import Groups from './modules/groups';
 import Archive from './modules/archive';
 import Site from './modules/site';
 
+export * from './types/index';
 
 export default class Expert {
     private globals: ExpertGlobalOptions = {};
