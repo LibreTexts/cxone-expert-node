@@ -4,8 +4,10 @@ import requests from './modules/requests';
 import { AuthObject, BaseArgs, BrowserTokenParams, ExpertGlobalOptions, ServerTokenParams } from './types';
 import Pages from './modules/pages';
 import Groups from './modules/groups';
+import Events from './modules/events';
 import Archive from './modules/archive';
 import Site from './modules/site';
+import contextMaps from './modules/contextMaps';
 
 
 export default class Expert {
@@ -15,6 +17,8 @@ export default class Expert {
     private _site?: Site;
     private _auth?: auth;
     private _archive?: Archive;
+    private _events?: Events;
+    private _contextMaps?: contextMaps;
 
     constructor(tld?: string) {
         if (tld) {
@@ -60,6 +64,21 @@ export default class Expert {
         }
 
         return this._groups;
+    }
+
+    public get events(): Events {
+        if (!this._events) {
+            this._events = new Events(this.globals);
+        }
+
+        return this._events;
+    }
+
+    public get contextMaps(): contextMaps {
+        if (!this._contextMaps) {
+            this._contextMaps = new contextMaps(this.globals);
+        }
+        return this._contextMaps;
     }
 
 }
