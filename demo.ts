@@ -1,7 +1,5 @@
-import { loadEnvFile } from "process";
+import 'dotenv/config';
 import Expert from "./src";
-
-loadEnvFile();
 
 (async () => {
   const tld = process.env.SERVER_DOMAIN; // Your CXone site domain
