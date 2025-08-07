@@ -295,7 +295,9 @@ export type GetPageTreeParams = {
   authenticate?: boolean;
 };
 
-export type GetPageTreeResponse = Partial<GetPagesResponse>;
+export type GetPageTreeResponse = {
+  page: Partial<GetPagesResponse>;
+};
 
 export type GetPageBookParams = {
   format?: "html" | "pdf";
@@ -642,7 +644,7 @@ export type PageExtended = {
   properties: {
     "@count"?: string;
     "@href"?: string;
-    property?: Record<string, string>[];
+    property?: PageProperty[];
   } | "";
   rating: Partial<PageRating> | "";
   revisions: Partial<PageRevision> | "";
@@ -740,17 +742,17 @@ export type Tags = {
 }
 
 export type PageProperty = {
-  "@revision": string;
-  "@resid": string;
-  "@name": string;
-  "@href": string;
   "@etag": string;
+  "@href": string;
+  "@name": string;
+  "@resid": string;
   "@resource-is-deleted": string;
   "@resource-rev-is-deleted": string;
+  "@revision": string;
   "change-description": string;
-  contents: Partial<Contents> | "";
+  contents: Pick<Contents, '@href' | '@size' | '#text' | '@type'>;
   "date.modified": string;
-  "user.modified": Partial<ExpertUser> | "";
+  "user.modified": ExpertUser;
 }
 
 export type page_subpage = {
