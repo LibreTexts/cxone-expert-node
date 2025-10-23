@@ -1011,6 +1011,8 @@ export default class Pages {
 
   public async postPageProperties(
     id: string | number,
+    propertyName: string,
+    propertyValue: string,
     funcArgs: BaseArgs,
     reqArgs?: PostPagePropertiesParams
   ){
@@ -1020,8 +1022,11 @@ export default class Pages {
 
     const res = await requests.post<PostPagePropertiesResponse>(
       `/pages/${pageId}/properties`,
-      "",
+      propertyValue,
       {
+        headers: {
+          Slug: propertyName,
+        },
         params: {
           ...reqArgs,
         },
@@ -1033,6 +1038,8 @@ export default class Pages {
 
   public async putPageProperties(
     id: string | number,
+    propertyName: string,
+    propertyValue: string,
     funcArgs: BaseArgs,
     reqArgs?: PutPagePropertiesParams
   ){
@@ -1042,8 +1049,11 @@ export default class Pages {
 
     const res = await requests.put<PutPagePropertiesResponse>(
       `/pages/${pageId}/properties`,
-      "",
+      propertyValue,
       {
+        headers: {
+          Slug: propertyName,
+        },
         params: {
           ...reqArgs,
         },
