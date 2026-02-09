@@ -8,7 +8,7 @@ import {
     GetGroupUserParams,
     GetGroupUserResponse
   } from "../types";
-  import { getTld } from "../utils";
+  import { getTld, getAuth } from "../utils";
   import Auth from "./auth";
   import Requests from "./requests";
 
@@ -29,11 +29,12 @@ export default class Groups {
   }
 
   public async getGroups(
-      funcArgs: BaseArgs,
+      funcArgs: BaseArgs = {},
       reqArgs?: GetGroupsParams
   ) {
       const tld = getTld(this.globals, funcArgs.tld);
-      const requests = new Requests(tld, funcArgs.auth);
+      const auth = getAuth(this.globals, funcArgs.auth);
+      const requests = new Requests(tld, auth);
 
       const res = await requests.get<GetGroupsResponse>(`/groups`, {
         params: {
@@ -45,12 +46,13 @@ export default class Groups {
 
   public async getGroup(
       id: string | number,
-      funcArgs: BaseArgs,
+      funcArgs: BaseArgs = {},
       reqArgs?: GetGroupParams
     ) {
       const groupId = this.parseGroupId(id);
       const tld = getTld(this.globals, funcArgs.tld);
-      const requests = new Requests(tld, funcArgs.auth);
+      const auth = getAuth(this.globals, funcArgs.auth);
+      const requests = new Requests(tld, auth);
   
       const res = await requests.get<GetGroupResponse>(`/groups/${groupId}`, {
         params: {
@@ -62,12 +64,13 @@ export default class Groups {
 
     public async getGroupUser(
         id: string | number,
-        funcArgs: BaseArgs,
+        funcArgs: BaseArgs = {},
         reqArgs?: GetGroupUserParams
       ) {
         const groupId = this.parseGroupId(id);
         const tld = getTld(this.globals, funcArgs.tld);
-        const requests = new Requests(tld, funcArgs.auth);
+        const auth = getAuth(this.globals, funcArgs.auth);
+        const requests = new Requests(tld, auth);
     
         const res = await requests.get<GetGroupUserResponse>(`/groups/${groupId}/users`, {
           params: {

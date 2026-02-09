@@ -1,7 +1,7 @@
 import pages from './modules/pages';
 import auth from './modules/auth';
 import requests from './modules/requests';
-import { AuthObject, BaseArgs, BrowserTokenParams, ExpertGlobalOptions, ServerTokenParams } from './types';
+import { AuthConfig, AuthObject, BaseArgs, BrowserTokenParams, ExpertGlobalOptions, ServerTokenParams } from './types';
 import Pages from './modules/pages';
 import Groups from './modules/groups';
 import Events from './modules/events';
@@ -25,10 +25,26 @@ export default class Expert {
     private _users?: Users;
     private _files?: Files;
 
-    constructor(tld?: string) {
-        if (tld) {
-            this.globals.tld = tld;
+    constructor(options?: { tld?: string; auth?: AuthConfig }) {
+        if (options) {
+            if (options.tld) this.globals.tld = options.tld;
+            if (options.auth) this.globals.auth = options.auth;
         }
+    }
+
+    public setAuth(authConfig: AuthConfig): this {
+        this.globals.auth = authConfig;
+        return this;
+    }
+
+    public configureServerAuth(params: ServerTokenParams): this {
+        this.globals.auth = { type: 'server', params };
+        return this;
+    }
+
+    public configureBrowserAuth(params: BrowserTokenParams): this {
+        this.globals.auth = { type: 'browser', params };
+        return this;
     }
 
     public get pages(): Pages {

@@ -23,7 +23,7 @@ import {
     DelDescriptionFileParams,
     DelDescriptionFileResponse
   } from "../types";
-import { getTld } from "../utils";
+import { getTld, getAuth } from "../utils";
 import Auth from "./auth";
 import Requests from "./requests";
 
@@ -53,12 +53,13 @@ export default class Files {
 
   public async getFile(
       id: string | number,
-      funcArgs: BaseArgs,
+      funcArgs: BaseArgs = {},
       reqArgs?: GetFileParams
   ) {
       const fileId = this.parseFileId(id);
       const tld = getTld(this.globals, funcArgs.tld);
-      const requests = new Requests(tld, funcArgs.auth);
+      const auth = getAuth(this.globals, funcArgs.auth);
+      const requests = new Requests(tld, auth);
   
       const res = await requests.get(`files/${fileId}`, {
         params: {
@@ -72,13 +73,14 @@ export default class Files {
   public async getFileName(
     id: string | number,
     filename: string,
-    funcArgs: BaseArgs,
+    funcArgs: BaseArgs = {},
     reqArgs?: GetFileNameParams
   ) {
     const fileId = this.parseFileId(id);
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs.tld);
-    const requests = new Requests(tld, funcArgs.auth);
+    const auth = getAuth(this.globals, funcArgs.auth);
+    const requests = new Requests(tld, auth);
 
     const res = await requests.get(`files/${fileId}/${filenameId}`, {
       params: {
@@ -91,12 +93,13 @@ export default class Files {
 
   public async getFileDescription(
     id: string | number,
-    funcArgs: BaseArgs,
+    funcArgs: BaseArgs = {},
     reqArgs?: GetFileDescriptionParams
   ) {
     const fileId = this.parseFileId(id);
     const tld = getTld(this.globals, funcArgs.tld);
-    const requests = new Requests(tld, funcArgs.auth);
+    const auth = getAuth(this.globals, funcArgs.auth);
+    const requests = new Requests(tld, auth);
 
     const res = await requests.get(`files/${fileId}/description`, {
       params: {
@@ -109,12 +112,13 @@ export default class Files {
 
   public async getFileInfo(
     id: string | number,
-    funcArgs: BaseArgs,
+    funcArgs: BaseArgs = {},
     reqArgs?: GetFileInfoParams
   ) {
     const fileId = this.parseFileId(id);
     const tld = getTld(this.globals, funcArgs.tld);
-    const requests = new Requests(tld, funcArgs.auth);
+    const auth = getAuth(this.globals, funcArgs.auth);
+    const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetFileInfoResponse>(`files/${fileId}/info`, {
       params: {
@@ -126,12 +130,13 @@ export default class Files {
 
   public async getFileRevisions(
     id: string | number,
-    funcArgs: BaseArgs,
+    funcArgs: BaseArgs = {},
     reqArgs?: GetFileRevisionsParams
   ) {
     const fileId = this.parseFileId(id);
     const tld = getTld(this.globals, funcArgs.tld);
-    const requests = new Requests(tld, funcArgs.auth);
+    const auth = getAuth(this.globals, funcArgs.auth);
+    const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetFileRevisionsResponse>(`files/${fileId}/revisions`, {
       params: {
@@ -143,12 +148,13 @@ export default class Files {
 
   public async deleteFile(
     id: string | number,
-    funcArgs: BaseArgs,
+    funcArgs: BaseArgs = {},
     reqArgs?: DeleteFileParams
   ) {
     const fileId = this.parseFileId(id);
     const tld = getTld(this.globals, funcArgs.tld);
-    const requests = new Requests(tld, funcArgs.auth);
+    const auth = getAuth(this.globals, funcArgs.auth);
+    const requests = new Requests(tld, auth);
 
     const res = await requests.del(`files/${fileId}`, {
       params: {
@@ -160,12 +166,13 @@ export default class Files {
 
   public async headFile(
     id: string | number,
-    funcArgs: BaseArgs,
+    funcArgs: BaseArgs = {},
     reqArgs?: HeadFileParams
   ) {
     const fileId = this.parseFileId(id);
     const tld = getTld(this.globals, funcArgs.tld);
-    const requests = new Requests(tld, funcArgs.auth);
+    const auth = getAuth(this.globals, funcArgs.auth);
+    const requests = new Requests(tld, auth);
 
     const res = await requests.head(`files/${fileId}`, {
       params: {
@@ -177,12 +184,13 @@ export default class Files {
 
   public async putFile(
     id: string | number,
-    funcArgs: BaseArgs,
+    funcArgs: BaseArgs = {},
     reqArgs?: PutFileParams
   ) {
     const fileId = this.parseFileId(id);
     const tld = getTld(this.globals, funcArgs.tld);
-    const requests = new Requests(tld, funcArgs.auth);
+    const auth = getAuth(this.globals, funcArgs.auth);
+    const requests = new Requests(tld, auth);
 
     const res = await requests.put<PutFileResponse>(`files/${fileId}`, 
       "",
@@ -197,13 +205,14 @@ export default class Files {
   public async deleteFileName(
     id: string | number,
     filename: string,
-    funcArgs: BaseArgs,
+    funcArgs: BaseArgs = {},
     reqArgs?: DeleteFileNameParams
   ) {
     const fileId = this.parseFileId(id);
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs.tld);
-    const requests = new Requests(tld, funcArgs.auth);
+    const auth = getAuth(this.globals, funcArgs.auth);
+    const requests = new Requests(tld, auth);
 
     const res = await requests.del(`files/${fileId}/${filenameId}`, { 
       params: {
@@ -216,13 +225,14 @@ export default class Files {
   public async headFileName(
     id: string | number,
     filename: string,
-    funcArgs: BaseArgs,
+    funcArgs: BaseArgs = {},
     reqArgs?: HeadFileNameParams
   ) {
     const fileId = this.parseFileId(id);
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs.tld);
-    const requests = new Requests(tld, funcArgs.auth);
+    const auth = getAuth(this.globals, funcArgs.auth);
+    const requests = new Requests(tld, auth);
 
     const res = await requests.head(`files/${fileId}/${filenameId}`, {  
       params: {
@@ -235,13 +245,14 @@ export default class Files {
   public async putFileName(
     id: string | number,
     filename: string,
-    funcArgs: BaseArgs,
+    funcArgs: BaseArgs = {},
     reqArgs?: PutFileNameParams
   ) {
     const fileId = this.parseFileId(id);
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs.tld);
-    const requests = new Requests(tld, funcArgs.auth);
+    const auth = getAuth(this.globals, funcArgs.auth);
+    const requests = new Requests(tld, auth);
 
     const res = await requests.put(`files/${fileId}/${filenameId}`, 
       "",
@@ -255,12 +266,13 @@ export default class Files {
   
   public async postFileCopy(
     id: string | number,
-    funcArgs: BaseArgs,
+    funcArgs: BaseArgs = {},
     reqArgs?: PostFileCopyParams
   ) {
     const fileId = this.parseFileId(id);
     const tld = getTld(this.globals, funcArgs.tld);
-    const requests = new Requests(tld, funcArgs.auth);
+    const auth = getAuth(this.globals, funcArgs.auth);
+    const requests = new Requests(tld, auth);
 
     const res = await requests.post<PostFileCopyResponse>(`files/${fileId}/copy`, 
       "",
@@ -274,12 +286,13 @@ export default class Files {
 
   public async delDescriptionFile(
     id: string | number,
-    funcArgs: BaseArgs,
+    funcArgs: BaseArgs = {},
     reqArgs?: DelDescriptionFileParams
   ) {
     const fileId = this.parseFileId(id);
     const tld = getTld(this.globals, funcArgs.tld);
-    const requests = new Requests(tld, funcArgs.auth);
+    const auth = getAuth(this.globals, funcArgs.auth);
+    const requests = new Requests(tld, auth);
 
     const res = await requests.del<DelDescriptionFileResponse>(`files/${fileId}/description`, {
       params: {

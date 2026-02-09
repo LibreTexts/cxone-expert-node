@@ -6,7 +6,7 @@ import {
     GetContextMapByIdParams,
     GetContextMapByIdResponse
 } from "../types";
-import { getTld } from "../utils";
+import { getTld, getAuth } from "../utils";
 import Auth from "./auth";
 import Requests from "./requests";
 
@@ -24,11 +24,12 @@ export default class contextMaps {
     }
 
     public async getContextMaps(
-        funcArgs: BaseArgs,
+        funcArgs: BaseArgs = {},
         reqArgs?: GetContextMapParams
     ) {
         const tld = getTld(this.globals, funcArgs.tld);
-        const requests = new Requests(tld, funcArgs.auth);
+        const auth = getAuth(this.globals, funcArgs.auth);
+        const requests = new Requests(tld, auth);
         const res = await requests.get<GetContextMapResponse>(`/contextmaps`, {
           params: {
               ...reqArgs,
@@ -40,11 +41,12 @@ export default class contextMaps {
     public async getContextMapsById(
         language: string,
         id: string | number,
-        funcArgs: BaseArgs,
+        funcArgs: BaseArgs = {},
         reqArgs?: GetContextMapByIdParams 
     ) {
         const tld = getTld(this.globals, funcArgs.tld);
-        const requests = new Requests(tld, funcArgs.auth);
+        const auth = getAuth(this.globals, funcArgs.auth);
+        const requests = new Requests(tld, auth);
         const res = await requests.get<GetContextMapByIdResponse>(`/contextmaps/${language}/${id}`, {
           params: {
               ...reqArgs,
