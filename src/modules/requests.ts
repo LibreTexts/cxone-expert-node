@@ -14,10 +14,17 @@ export default class Requests {
         if (!authObject) {
             throw new Error('Auth object is required');
         }
-        const parsedTLD = tld.endsWith('/') ? tld.slice(
-            0,
-            tld.length - 1
-        ) : `${tld}`;
+
+        // Ensure protocol is present
+        let parsedTLD = tld;
+        if (!parsedTLD.startsWith('http://') && !parsedTLD.startsWith('https://')) {
+            parsedTLD = `https://${parsedTLD}`;
+        }
+
+        // Remove trailing slash
+        if (parsedTLD.endsWith('/')) {
+            parsedTLD = parsedTLD.slice(0, parsedTLD.length - 1);
+        }
 
         this.format = format;
 

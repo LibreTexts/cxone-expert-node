@@ -53,7 +53,7 @@ import {
   GetPagesCsvParams,
   GetPagesPopularParams,
   GetPagesPopularResponse,
-  PostPageContentsParams, 
+  PostPageContentsParams,
   PostPageContentsResponse,
   DeletePageParams,
   DeletePageResponse,
@@ -96,7 +96,6 @@ import { getTld, getAuth } from "../utils";
 import Auth from "./auth";
 import Requests from "./requests";
 import { Buffer } from 'buffer';
-import type { Readable } from 'stream';
 
 export default class Pages {
   private globals: ExpertGlobalOptions;
@@ -107,6 +106,13 @@ export default class Pages {
     this._auth = auth;
   }
 
+  /**
+   * Converts a page identifier (number or string) into the format expected by the API.
+   * If the identifier is a number, it's simply converted to a string and returned as-is.
+   * If it's a page path, it's double URL-encoded and prefixed with '=' to indicate it's a path.
+   * @param id - The page identifier, which can be a number (page ID), or a page path.
+   * @returns A string formatted for use in API endpoints, either as a page ID or a double URL-encoded page path.
+   */
   private parsePageId(id: string | number) {
     if (typeof id === "number") {
       return id.toString();
@@ -117,9 +123,18 @@ export default class Pages {
     return `=${encodeURIComponent(encodeURIComponent(id))}`;
   }
 
+  /**
+   * Double URL-encodes a filename and prefixes it with '=' to indicate it's a filename in the API.
+   * @param name - The filename to be formatted for API use.
+   */
   private parseFileName(name: string) {
     return `=${encodeURIComponent(encodeURIComponent(name))}`;
   }
+
+  /**
+   * Double URL-encodes a property key for use in API endpoints.
+   * @param name - The property key to be formatted for API use.
+   */
   private parseKey(name: string) {
     return `${encodeURIComponent(encodeURIComponent(name))}`;
   }
@@ -141,16 +156,16 @@ export default class Pages {
   }
 
   public async getPage(
-    id: string | number,
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetPageParams
+    idOrPath: string | number,
+    reqArgs?: GetPageParams,
+    funcArgs?: BaseArgs
   ) {
-    const pageId = this.parsePageId(id);
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const id = this.parsePageId(idOrPath);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
-    const res = await requests.get<GetPageResponse>(`/pages/${pageId}`, {
+    const res = await requests.get<GetPageResponse>(`/pages/${id}`, {
       params: {
         ...reqArgs,
       },
@@ -160,12 +175,12 @@ export default class Pages {
 
   public async getPageContents(
     id: string | number,
-    funcArgs: BaseArgs = {},
+    funcArgs?: BaseArgs,
     reqArgs?: GetPageContentsParams
   ) {
     const pageId = this.parsePageId(id);
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetPageContentsResponse>(`/pages/${pageId}/contents`, {
@@ -178,12 +193,12 @@ export default class Pages {
 
   public async getPageContentsExplain(
     id: string | number,
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetPageContentsExplainParams
+    reqArgs?: GetPageContentsExplainParams,
+    funcArgs?: BaseArgs,
   ) {
     const pageId = this.parsePageId(id);
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetPageContentsExplainResponse>(`/pages/${pageId}/contents/explain`, {
@@ -196,12 +211,12 @@ export default class Pages {
 
   public async getPageDiff(
     id: string | number,
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetPageDiffParams
+    reqArgs?: GetPageDiffParams,
+    funcArgs?: BaseArgs
   ) {
     const pageId = this.parsePageId(id);
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetPageDiffResponse>(`/pages/${pageId}/diff`, {
@@ -425,7 +440,7 @@ export default class Pages {
     });
     return res.data;
   }
-  
+
   public async getPageLinks(
     id: string | number,
     funcArgs: BaseArgs = {},
@@ -462,7 +477,7 @@ export default class Pages {
     });
     return res.data;
   }
-  
+
   public async getPagePDFFilename(
     id: string | number,
     filename: string,
@@ -706,21 +721,21 @@ export default class Pages {
     });
     return res.data;
   }
-  
+
   public async postPageContents(
     id: string | number,
     funcArgs: BaseArgs = {},
-    content?: string, 
+    content?: string,
     reqArgs?: PostPageContentsParams
   ) {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
     const requests = new Requests(tld, auth);
-  
+
     const res = await requests.post<PostPageContentsResponse>(
       `/pages/${pageId}/contents`,
-      content ?? "", 
+      content ?? "",
       {
         headers: {
           "Content-Type": "text/plain",
@@ -741,12 +756,12 @@ export default class Pages {
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
     const requests = new Requests(tld, auth);
-  
+
     const res = await requests.put(
       `/pages/${pageId}/unorder`,
       ""
     );
-  
+
     return res.data;
   }
 
@@ -759,7 +774,7 @@ export default class Pages {
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
     const requests = new Requests(tld, auth);
-  
+
     const res = await requests.del<DeletePageResponse>(
       `/pages/${pageId}`,
       {
@@ -768,7 +783,7 @@ export default class Pages {
         },
       }
     );
-  
+
     return res.data;
   }
 
@@ -781,7 +796,7 @@ export default class Pages {
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
     const requests = new Requests(tld, auth);
-  
+
     const res = await requests.del<PostPageAllowedResponse>(
       `/pages/${pageId}/allowed`,
       {
@@ -790,7 +805,7 @@ export default class Pages {
         },
       }
     );
-  
+
     return res.data;
   }
 
@@ -803,7 +818,7 @@ export default class Pages {
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
     const requests = new Requests(tld, auth);
-  
+
     const res = await requests.post<PostCopyPageResponse>(
       `/pages/${pageId}/copy`,
       "",
@@ -813,24 +828,24 @@ export default class Pages {
         },
       }
     );
-  
+
     return res.data;
   }
 
   public async postPageExport(
     id: string | number,
     funcArgs: BaseArgs = {}
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
     const requests = new Requests(tld, auth);
-  
+
     const res = await requests.post(
       `/pages/${pageId}/export`,
       "",
     );
-  
+
     return res.data;
   }
 
@@ -839,13 +854,13 @@ export default class Pages {
     filename: string,
     funcArgs: BaseArgs = {},
     reqArgs?: DeletePageFileNameParams
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
     const requests = new Requests(tld, auth);
-  
+
     const res = await requests.del(
       `/pages/${pageId}/files/${filenameId}`,
       {
@@ -854,7 +869,7 @@ export default class Pages {
         },
       }
     );
-  
+
     return res.data;
   }
 
@@ -863,13 +878,13 @@ export default class Pages {
     filename: string,
     funcArgs: BaseArgs = {},
     reqArgs?: HeadPageFileNameParams
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
     const requests = new Requests(tld, auth);
-  
+
     const res = await requests.head(
       `/pages/${pageId}/files/${filenameId}`,
       {
@@ -878,17 +893,17 @@ export default class Pages {
         },
       }
     );
-  
+
     return res.data;
   }
 
   public async putPageFileName(
     id: string | number,
     filename: string,
-    file: Buffer | NodeJS.ReadableStream, 
+    file: Buffer | NodeJS.ReadableStream,
     funcArgs: BaseArgs = {},
     reqArgs?: PutPageFileNameParams
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs.tld);
@@ -910,19 +925,19 @@ export default class Pages {
     return res.data;
   }
 
-  
+
   public async delPageFileNameDescription(
     id: string | number,
     filename: string,
     funcArgs: BaseArgs = {},
     reqArgs?: DeletePageFileNameDescriptionParams
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
     const requests = new Requests(tld, auth);
-  
+
     const res = await requests.del<DeletePageFileNameDescriptionResponse>(
       `/pages/${pageId}/files/${filenameId}/description`,
       {
@@ -931,7 +946,7 @@ export default class Pages {
         },
       }
     );
-  
+
     return res.data;
   }
 
@@ -940,13 +955,13 @@ export default class Pages {
     filename: string,
     funcArgs: BaseArgs = {},
     reqArgs?: PutPageFileNameDescriptionParams
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
     const requests = new Requests(tld, auth);
-  
+
     const res = await requests.put<PutPageFileNameDescriptionResponse>(
       `/pages/${pageId}/files/${filenameId}/description`,
       {
@@ -955,7 +970,7 @@ export default class Pages {
         },
       }
     );
-  
+
     return res.data;
   }
 
@@ -965,14 +980,14 @@ export default class Pages {
     key: string,
     funcArgs: BaseArgs = {},
     reqArgs?: PutPageFileNamePropertiesKeyParams
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const filenameId = this.parseFileName(filename);
     const keyId = this.parseKey(key);
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
     const requests = new Requests(tld, auth);
-  
+
     const res = await requests.put<PutPageFileNamePropertiesKeyResponse>(
       `/pages/${pageId}/files/${filenameId}/properties/${keyId}`,
       "",
@@ -982,7 +997,7 @@ export default class Pages {
         },
       }
     );
-  
+
     return res.data;
   }
 
@@ -990,7 +1005,7 @@ export default class Pages {
     id: string | number,
     funcArgs: BaseArgs = {},
     reqArgs?: PutPageImportParams
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
@@ -1013,7 +1028,7 @@ export default class Pages {
     id: string | number,
     funcArgs: BaseArgs = {},
     reqArgs?: PutPageMoveParams
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
@@ -1036,7 +1051,7 @@ export default class Pages {
     id: string | number,
     funcArgs: BaseArgs = {},
     reqArgs?: PutPageOrderParams
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
@@ -1061,7 +1076,7 @@ export default class Pages {
     propertyValue: string,
     funcArgs: BaseArgs = {},
     reqArgs?: PostPagePropertiesParams
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
@@ -1089,7 +1104,7 @@ export default class Pages {
     propertyValue: string,
     funcArgs: BaseArgs = {},
     reqArgs?: PutPagePropertiesParams
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
@@ -1116,7 +1131,7 @@ export default class Pages {
     key: string,
     funcArgs: BaseArgs = {},
     reqArgs?: DeletePagePropertiesKeyParams
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const keyId = this.parseKey(key);
     const tld = getTld(this.globals, funcArgs.tld);
@@ -1140,7 +1155,7 @@ export default class Pages {
     key: string,
     funcArgs: BaseArgs = {},
     reqArgs?: PutPagePropertiesKeyParams
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const keyId = this.parseKey(key);
     const tld = getTld(this.globals, funcArgs.tld);
@@ -1164,7 +1179,7 @@ export default class Pages {
     id: string | number,
     funcArgs: BaseArgs = {},
     reqArgs?: PostPageRatingsParams
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
@@ -1187,7 +1202,7 @@ export default class Pages {
     id: string | number,
     funcArgs: BaseArgs = {},
     reqArgs?: PostPageRevertParams
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
@@ -1210,7 +1225,7 @@ export default class Pages {
     id: string | number,
     funcArgs: BaseArgs = {},
     reqArgs?: DeletePageSecurityParams
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
@@ -1233,7 +1248,7 @@ export default class Pages {
     funcArgs: BaseArgs = {},
     content?: string,
     reqArgs?: PostPageSecurityParams
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
@@ -1257,7 +1272,7 @@ export default class Pages {
     funcArgs: BaseArgs = {},
     content?: string,
     reqArgs?: PutPageSecurityParams
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
@@ -1281,7 +1296,7 @@ export default class Pages {
     funcArgs: BaseArgs = {},
     content?: string,
     reqArgs?: PutPageTagsParams
-  ){
+  ) {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs.tld);
     const auth = getAuth(this.globals, funcArgs.auth);
