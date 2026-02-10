@@ -43,12 +43,12 @@ export default class Events {
 
     public async getPageHierarchyById(
         id: string | number,
-        funcArgs: BaseArgs = {},
-        reqArgs?: GetPageHierarchyByIdParams
+        reqArgs?: GetPageHierarchyByIdParams,
+        funcArgs?: BaseArgs
     ){
         const pageId = this.parsePageId(id);
-        const tld = getTld(this.globals, funcArgs.tld);
-        const auth = getAuth(this.globals, funcArgs.auth);
+        const tld = getTld(this.globals, funcArgs?.tld);
+        const auth = getAuth(this.globals, funcArgs?.auth);
         const requests = new Requests(tld, auth);
         const res = await requests.get<GetPageHierarchyByIdResponse>(`events/page-hierarchy/${pageId}`, {
             params: {
@@ -61,12 +61,12 @@ export default class Events {
     public async getPageHierarchyDetailById(
         id: string | number,
         detailId: string,
-        funcArgs: BaseArgs = {},
-        reqArgs?: GetPageHierarchyDetailByIdParams
+        reqArgs?: GetPageHierarchyDetailByIdParams,
+        funcArgs?: BaseArgs
     ){
         const pageId = this.parsePageId(id);
-        const tld = getTld(this.globals, funcArgs.tld);
-        const auth = getAuth(this.globals, funcArgs.auth);
+        const tld = getTld(this.globals, funcArgs?.tld);
+        const auth = getAuth(this.globals, funcArgs?.auth);
         const requests = new Requests(tld, auth);
         const res = await requests.get<GetPageHierarchyDetailByIdResponse>(`events/page-hierarchy/${pageId}/${detailId}`, {
             params: {
@@ -78,12 +78,12 @@ export default class Events {
 
     public async getEventPage(
         id: string | number,
-        funcArgs: BaseArgs = {},
-        reqArgs?: GetEventPageParams
+        reqArgs?: GetEventPageParams,
+        funcArgs?: BaseArgs
     ){
         const pageId = this.parsePageId(id);
-        const tld = getTld(this.globals, funcArgs.tld);
-        const auth = getAuth(this.globals, funcArgs.auth);
+        const tld = getTld(this.globals, funcArgs?.tld);
+        const auth = getAuth(this.globals, funcArgs?.auth);
         const requests = new Requests(tld, auth);
         const res = await requests.get<GetEventPageResponse>(`events/page/${pageId}`, {
             params: {
@@ -96,12 +96,12 @@ export default class Events {
     public async getEventPageDetail(
         id: string | number,
         detailId: string,
-        funcArgs: BaseArgs = {},
-        reqArgs?: GetEventPageDetailParams
+        reqArgs?: GetEventPageDetailParams,
+        funcArgs?: BaseArgs
     ){
         const pageId = this.parsePageId(id);
-        const tld = getTld(this.globals, funcArgs.tld);
-        const auth = getAuth(this.globals, funcArgs.auth);
+        const tld = getTld(this.globals, funcArgs?.tld);
+        const auth = getAuth(this.globals, funcArgs?.auth);
         const requests = new Requests(tld, auth);
         const res = await requests.get<GetEventPageDetailResponse>(`/events/page/${pageId}/${detailId}`, {
             params: {
@@ -113,11 +113,11 @@ export default class Events {
 
     public async getEventUserPage(
         userId: string | number,
-        funcArgs: BaseArgs = {},
-        reqArgs?: GetEventUserPageParams 
+        reqArgs?: GetEventUserPageParams,
+        funcArgs?: BaseArgs
     ){
-        const tld = getTld(this.globals, funcArgs.tld);
-        const auth = getAuth(this.globals, funcArgs.auth);
+        const tld = getTld(this.globals, funcArgs?.tld);
+        const auth = getAuth(this.globals, funcArgs?.auth);
         const requests = new Requests(tld, auth);
         const res = await requests.get<GetEventUserPageResponse>(`/events/user-page/${this.parseUserId(userId)}`, {
             params: {
@@ -130,11 +130,11 @@ export default class Events {
     public async getEventUserDetailPage(
         userId: string | number,
         detailId: string,
-        funcArgs: BaseArgs = {},
-        reqArgs?: GetEventUserPageDetailParams
+        reqArgs?: GetEventUserPageDetailParams,
+        funcArgs?: BaseArgs
     ){
-        const tld = getTld(this.globals, funcArgs.tld);
-        const auth = getAuth(this.globals, funcArgs.auth);
+        const tld = getTld(this.globals, funcArgs?.tld);
+        const auth = getAuth(this.globals, funcArgs?.auth);
         const requests = new Requests(tld, auth);
         const res = await requests.get<GetEventUserPageDetailResponse>(`/events/user-page/${this.parseUserId(userId)}/${detailId}`, {
             params: {

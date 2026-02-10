@@ -24,11 +24,11 @@ export default class contextMaps {
     }
 
     public async getContextMaps(
-        funcArgs: BaseArgs = {},
-        reqArgs?: GetContextMapParams
+        reqArgs?: GetContextMapParams,
+        funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs.tld);
-        const auth = getAuth(this.globals, funcArgs.auth);
+        const tld = getTld(this.globals, funcArgs?.tld);
+        const auth = getAuth(this.globals, funcArgs?.auth);
         const requests = new Requests(tld, auth);
         const res = await requests.get<GetContextMapResponse>(`/contextmaps`, {
           params: {
@@ -41,11 +41,11 @@ export default class contextMaps {
     public async getContextMapsById(
         language: string,
         id: string | number,
-        funcArgs: BaseArgs = {},
-        reqArgs?: GetContextMapByIdParams 
+        reqArgs?: GetContextMapByIdParams,
+        funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs.tld);
-        const auth = getAuth(this.globals, funcArgs.auth);
+        const tld = getTld(this.globals, funcArgs?.tld);
+        const auth = getAuth(this.globals, funcArgs?.auth);
         const requests = new Requests(tld, auth);
         const res = await requests.get<GetContextMapByIdResponse>(`/contextmaps/${language}/${id}`, {
           params: {
