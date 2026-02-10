@@ -47,11 +47,11 @@ export default class Site {
   }
 
   public async getSiteActivity(
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetSiteActivityParams
+    reqArgs?: GetSiteActivityParams,
+    funcArgs?: BaseArgs
   ) {
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetSiteActivityResponse>(`/site/activity`, {
@@ -63,10 +63,10 @@ export default class Site {
   }
 
   public async getSiteExportGroups(
-    funcArgs: BaseArgs = {}
+    funcArgs?: BaseArgs
   ) {
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetSiteExportGroupsResponse>(`/site/export/groups`);
@@ -74,10 +74,10 @@ export default class Site {
   }
 
   public async getSiteExportUsers(
-    funcArgs: BaseArgs = {}
+    funcArgs?: BaseArgs
   ) {
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetSiteExportUsersResponse>(`/site/export/users`);
@@ -86,12 +86,12 @@ export default class Site {
 
   public async getSiteSubPagesTags(
     id: string | number,
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetSiteSubPagesTagsParams
+    reqArgs?: GetSiteSubPagesTagsParams,
+    funcArgs?: BaseArgs
   ){
     const pageId = this.parsePageId(id);
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetSiteSubPagesTagsResponse>(
@@ -107,12 +107,12 @@ export default class Site {
 
   public async getSiteFullNavTreeTags(
     id: string | number,
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetSiteFullNavTreeTagsParams
+    reqArgs?: GetSiteFullNavTreeTagsParams,
+    funcArgs?: BaseArgs
   ){
     const pageId = this.parsePageId(id);
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<string>(
@@ -127,11 +127,11 @@ export default class Site {
   }
 
   public async getSiteOperations(
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetSiteOperationsParams
+    reqArgs?: GetSiteOperationsParams,
+    funcArgs?: BaseArgs
   ){
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<string>(
@@ -146,11 +146,11 @@ export default class Site {
   }
 
   public async getSiteProperties(
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetSitePropertiesParams
+    reqArgs?: GetSitePropertiesParams,
+    funcArgs?: BaseArgs
   ){
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetSitePropertiesResponse>(
@@ -166,12 +166,12 @@ export default class Site {
 
   public async GetSiteKeyProperties(
     identifier: string,
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetSiteKeyPropertiesParams
+    reqArgs?: GetSiteKeyPropertiesParams,
+    funcArgs?: BaseArgs
   ){
     const key = this.parseKey(identifier);
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get(
@@ -187,12 +187,12 @@ export default class Site {
 
   public async GetSiteKeyPropertiesInfo(
     identifier: string,
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetSiteKeyPropertiesInfoParams
+    reqArgs?: GetSiteKeyPropertiesInfoParams,
+    funcArgs?: BaseArgs
   ){
     const key = this.parseKey(identifier);
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetSiteKeyPropertiesInfoResponse>(
@@ -207,11 +207,11 @@ export default class Site {
   }
 
   public async GetSiteQuery(
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetSiteQueryParams
+    reqArgs?: GetSiteQueryParams,
+    funcArgs?: BaseArgs
   ){
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetSiteQueryResponse>(
@@ -226,10 +226,10 @@ export default class Site {
   }
 
   public async GetSiteStatus(
-    funcArgs: BaseArgs = {},
+    funcArgs?: BaseArgs
   ){
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetSiteStatusResponse>(
@@ -239,11 +239,11 @@ export default class Site {
   }
 
   public async GetSiteTags(
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetSiteTagsParams
+    reqArgs?: GetSiteTagsParams,
+    funcArgs?: BaseArgs
   ){
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetSiteTagsResponse>(
@@ -258,11 +258,11 @@ export default class Site {
   }
 
   public async GetSiteTag(
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetSiteTagParams
+    reqArgs?: GetSiteTagParams,
+    funcArgs?: BaseArgs
   ){
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetSiteTagResponse>(

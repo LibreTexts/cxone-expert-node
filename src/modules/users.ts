@@ -41,11 +41,11 @@ export default class Users {
   }
 
   public async getUsers(
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetUsersParams
+    reqArgs?: GetUsersParams,
+    funcArgs?: BaseArgs
   ) {
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetUsersResponse>(`/users`, {
@@ -58,12 +58,12 @@ export default class Users {
 
   public async getUser(
     id: string | number,
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetUserParams
+    reqArgs?: GetUserParams,
+    funcArgs?: BaseArgs
   ) {
     const userId = this.parseUserId(id);
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetUserResponse>(`/users/${userId}`, {
@@ -76,12 +76,12 @@ export default class Users {
 
   public async getUserMetrics(
     id: string | number,
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetUserMetricsParams
+    reqArgs?: GetUserMetricsParams,
+    funcArgs?: BaseArgs
   ) {
     const userId = this.parseUserId(id);
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetUserMetricsResponse>(`/users/${userId}/metrics`, {
@@ -94,12 +94,12 @@ export default class Users {
 
   public async getUserProperties(
     id: string | number,
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetUserPropertiesParams
+    reqArgs?: GetUserPropertiesParams,
+    funcArgs?: BaseArgs
   ) {
     const userId = this.parseUserId(id);
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetUserPropertiesResponse>(`/users/${userId}/properties`, {
@@ -113,13 +113,13 @@ export default class Users {
   public async getUserPropertiesKey(
     id: string | number,
     identifier: string,
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetUserPropertiesKeyParams
+    reqArgs?: GetUserPropertiesKeyParams,
+    funcArgs?: BaseArgs
   ) {
     const userId = this.parseUserId(id);
     const key = this.parseKey(identifier);
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetUserPropertiesKeyResponse>(`/users/${userId}/properties/${key}`, {
@@ -133,13 +133,13 @@ export default class Users {
   public async getUserPropertiesKeyInfo(
     id: string | number,
     identifier: string,
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetUserPropertiesKeyInfoParams
+    reqArgs?: GetUserPropertiesKeyInfoParams,
+    funcArgs?: BaseArgs
   ) {
     const userId = this.parseUserId(id);
     const key = this.parseKey(identifier);
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetUserPropertiesKeyInfoResponse>(`/users/${userId}/properties/${key}/info`, {
@@ -151,11 +151,11 @@ export default class Users {
   }
 
   public async getUsersSearch(
-    funcArgs: BaseArgs = {},
-    reqArgs?: GetUserSearchParams
+    reqArgs?: GetUserSearchParams,
+    funcArgs?: BaseArgs
   ) {
-    const tld = getTld(this.globals, funcArgs.tld);
-    const auth = getAuth(this.globals, funcArgs.auth);
+    const tld = getTld(this.globals, funcArgs?.tld);
+    const auth = getAuth(this.globals, funcArgs?.auth);
     const requests = new Requests(tld, auth);
 
     const res = await requests.get<GetUserSearchResponse>(`/users/search`, {

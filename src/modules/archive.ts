@@ -33,11 +33,11 @@ export default class Archive {
     }
 
     public async getArchive(
-        funcArgs: BaseArgs = {},
-        reqArgs?: GetArchiveParams
+        reqArgs?: GetArchiveParams,
+        funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs.tld);
-        const auth = getAuth(this.globals, funcArgs.auth);
+        const tld = getTld(this.globals, funcArgs?.tld);
+        const auth = getAuth(this.globals, funcArgs?.auth);
         const requests = new Requests(tld, auth);
         const res = await requests.get<GetArchiveResponse>(`/archive`, {
           params: {
@@ -48,11 +48,11 @@ export default class Archive {
     }
 
     public async getArchiveFiles(
-        funcArgs: BaseArgs = {},
-        reqArgs?: GetArchiveFilesParams
+        reqArgs?: GetArchiveFilesParams,
+        funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs.tld);
-        const auth = getAuth(this.globals, funcArgs.auth);
+        const tld = getTld(this.globals, funcArgs?.tld);
+        const auth = getAuth(this.globals, funcArgs?.auth);
         const requests = new Requests(tld, auth);
         const res = await requests.get<GetArchiveFilesResponse>(`/archive/files`, {
           params: {
@@ -64,11 +64,11 @@ export default class Archive {
 
     public async getArchiveFile(
         fileId: number,
-        funcArgs: BaseArgs = {},
-        reqArgs?: GetArchiveFileParams
+        reqArgs?: GetArchiveFileParams,
+        funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs.tld);
-        const auth = getAuth(this.globals, funcArgs.auth);
+        const tld = getTld(this.globals, funcArgs?.tld);
+        const auth = getAuth(this.globals, funcArgs?.auth);
         const requests = new Requests(tld, auth);
         const res = await requests.get(`/archive/files/${fileId}`, {
           params: {
@@ -82,12 +82,12 @@ export default class Archive {
     public async getArchiveFileByName(
         fileId: number,
         fileName: string,
-        funcArgs: BaseArgs = {},
-        reqArgs?: GetArchiveFileParams
+        reqArgs?: GetArchiveFileParams,
+        funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs.tld);
+        const tld = getTld(this.globals, funcArgs?.tld);
         const parseFileName = this.parseFileName(fileName);
-        const auth = getAuth(this.globals, funcArgs.auth);
+        const auth = getAuth(this.globals, funcArgs?.auth);
         const requests = new Requests(tld, auth);
         const res = await requests.get(`/archive/files/${fileId}/${parseFileName}`, {
           params: {
@@ -100,11 +100,11 @@ export default class Archive {
 
     public async getArchiveFileInfo(
         fileId: number,
-        funcArgs: BaseArgs = {},
-        reqArgs?: GetArchiveFileParams
+        reqArgs?: GetArchiveFileParams,
+        funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs.tld);
-        const auth = getAuth(this.globals, funcArgs.auth);
+        const tld = getTld(this.globals, funcArgs?.tld);
+        const auth = getAuth(this.globals, funcArgs?.auth);
         const requests = new Requests(tld, auth);
         const res = await requests.get<GetArchiveFileInfoResponse>(`/archive/files/${fileId}/info`, {
           params: {
@@ -115,11 +115,11 @@ export default class Archive {
     }
 
     public async getArchivePages(
-        funcArgs: BaseArgs = {},
-        reqArgs?: GetArchivePagesParams
+        reqArgs?: GetArchivePagesParams,
+        funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs.tld);
-        const auth = getAuth(this.globals, funcArgs.auth);
+        const tld = getTld(this.globals, funcArgs?.tld);
+        const auth = getAuth(this.globals, funcArgs?.auth);
         const requests = new Requests(tld, auth);
         const res = await requests.get<GetArchivePagesResponse>(`/archive/pages`, {
           params: {
@@ -131,11 +131,11 @@ export default class Archive {
 
     public async getArchivePage(
         pageId: number,
-        funcArgs: BaseArgs = {},
-        reqArgs?: GetArchivePageParams
+        reqArgs?: GetArchivePageParams,
+        funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs.tld);
-        const auth = getAuth(this.globals, funcArgs.auth);
+        const tld = getTld(this.globals, funcArgs?.tld);
+        const auth = getAuth(this.globals, funcArgs?.auth);
         const requests = new Requests(tld, auth);
         const res = await requests.get<GetArchivePageResponse>(`/archive/page/${pageId}`, {
           params: {
@@ -147,11 +147,11 @@ export default class Archive {
 
     public async getArchivePageContents(
         pageId: number,
-        funcArgs: BaseArgs = {},
-        reqArgs?: GetArchivePageParams
+        reqArgs?: GetArchivePageParams,
+        funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs.tld);
-        const auth = getAuth(this.globals, funcArgs.auth);
+        const tld = getTld(this.globals, funcArgs?.tld);
+        const auth = getAuth(this.globals, funcArgs?.auth);
         const requests = new Requests(tld, auth);
         const res = await requests.get<GetArchivePageContentsResponse>(`/archive/page/${pageId}/contents`, {
           params: {
@@ -163,11 +163,11 @@ export default class Archive {
 
     public async getArchivePageInfo(
         pageId: number,
-        funcArgs: BaseArgs = {},
-        reqArgs?: GetArchivePageParams
+        reqArgs?: GetArchivePageParams,
+        funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs.tld);
-        const auth = getAuth(this.globals, funcArgs.auth);
+        const tld = getTld(this.globals, funcArgs?.tld);
+        const auth = getAuth(this.globals, funcArgs?.auth);
         const requests = new Requests(tld, auth);
         const res = await requests.get<GetArchivePageInfoResponse>(`/archive/page/${pageId}/info`, {
           params: {
@@ -179,11 +179,11 @@ export default class Archive {
 
     public async getArchivePageSubPages(
         pageId: number,
-        funcArgs: BaseArgs = {},
-        reqArgs?: GetArchivePageParams
+        reqArgs?: GetArchivePageParams,
+        funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs.tld);
-        const auth = getAuth(this.globals, funcArgs.auth);
+        const tld = getTld(this.globals, funcArgs?.tld);
+        const auth = getAuth(this.globals, funcArgs?.auth);
         const requests = new Requests(tld, auth);
         const res = await requests.get<GetArchivePageSubPagesResponse>(`/archive/page/${pageId}/subpages`, {
           params: {
