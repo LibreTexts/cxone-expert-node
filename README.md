@@ -1,3 +1,6 @@
+![NPM Version](https://img.shields.io/npm/v/%40libretexts%2Fcxone-expert-node) ![NPM Downloads](https://img.shields.io/npm/dm/%40libretexts%2Fcxone-expert-node)
+
+
 # CXone Expert Node SDK
 This package is a custom SDK developed by [LibreTexts](https://libretexts.org) to interact with the [CXone Expert API](https://expert-help.nice.com/Integrations_and_Extending_Content/API). It should be noted that this package is NOT developed or maintained by CXone and, as such, does not guarantee 100% compatibility with the latest API updates.
 
