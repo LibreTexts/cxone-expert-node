@@ -175,8 +175,8 @@ export default class Pages {
 
   public async getPageContents(
     id: string | number,
-    funcArgs?: BaseArgs,
-    reqArgs?: GetPageContentsParams
+    reqArgs?: GetPageContentsParams,
+    funcArgs?: BaseArgs
   ) {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
