@@ -1,5 +1,14 @@
 import { AuthObject, ExpertGlobalOptions } from "./types";
 import Auth from './modules/auth';
+import createDebug from 'debug';
+
+export function createDebugLogger(namespace: string, enabled?: boolean) {
+    const debugLogger = createDebug(namespace);
+    if (enabled !== undefined) {
+        debugLogger.enabled = enabled;
+    }
+    return debugLogger;
+}
 
 export function getTld(globals: ExpertGlobalOptions, tld?: string) {
     if (!tld && !globals.tld) {

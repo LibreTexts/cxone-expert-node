@@ -26,4 +26,5 @@ export type BaseArgs = {
 export type ExpertGlobalOptions = {
     tld?: string;
     auth?: AuthConfig;
+    debug?: boolean;
 }

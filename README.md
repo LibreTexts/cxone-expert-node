@@ -29,7 +29,8 @@ const expert = new Expert({
       secret: process.env.SERVER_SECRET,
       user: process.env.SERVER_USER,
     }
-  }
+  },
+  debug: false, // Optional debug logging
 });
 
 // Now you can start making API calls!
@@ -49,6 +50,9 @@ const page1 = await expert.pages.getPage(123);
 const customAuth = { 'X-Deki-Token': 'different-token' };
 const page2 = await expert.pages.getPage(456, { auth: customAuth });
 ```
+
+## Dependencies
+This package is designed to be lightweight and has only two dependencies: `axios` for making HTTP requests and `debug` for logging/troubleshooting.
 
 ## License
 This package is open-source and free to use under the [MIT License](http://opensource.org/licenses/MIT).
