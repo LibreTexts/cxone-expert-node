@@ -22,7 +22,7 @@ import {
     GetSiteTagParams,
     GetSiteTagResponse
   } from "../types";
-import { getTld, getAuth } from "../utils";
+import { getTld, getAuth, getHeaders } from "../utils";
 import Auth from "./auth";
 import Requests from "./requests";
 
@@ -52,7 +52,8 @@ export default class Site {
   ) {
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get<GetSiteActivityResponse>(`/site/activity`, {
       params: {
@@ -67,7 +68,8 @@ export default class Site {
   ) {
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get<GetSiteExportGroupsResponse>(`/site/export/groups`);
     return res.data;
@@ -78,7 +80,8 @@ export default class Site {
   ) {
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get<GetSiteExportUsersResponse>(`/site/export/users`);
     return res.data;
@@ -92,7 +95,8 @@ export default class Site {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get<GetSiteSubPagesTagsResponse>(
         `/site/nav/${pageId}/children`,
@@ -113,7 +117,8 @@ export default class Site {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get<string>(
         `/site/nav/${pageId}/full`,
@@ -132,7 +137,8 @@ export default class Site {
   ){
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get<string>(
         `/site/operations`,
@@ -151,7 +157,8 @@ export default class Site {
   ){
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get<GetSitePropertiesResponse>(
         `/site/properties`,
@@ -172,7 +179,8 @@ export default class Site {
     const key = this.parseKey(identifier);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get(
         `/site/properties/${key}`,
@@ -193,7 +201,8 @@ export default class Site {
     const key = this.parseKey(identifier);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get<GetSiteKeyPropertiesInfoResponse>(
         `/site/properties/${key}/info`,
@@ -212,7 +221,8 @@ export default class Site {
   ){
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get<GetSiteQueryResponse>(
         `/site/query`,
@@ -230,7 +240,8 @@ export default class Site {
   ){
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get<GetSiteStatusResponse>(
         `/site/status`
@@ -244,7 +255,8 @@ export default class Site {
   ){
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get<GetSiteTagsResponse>(
         `/site/tags`,
@@ -263,7 +275,8 @@ export default class Site {
   ){
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get<GetSiteTagResponse>(
         `/site/tag`,

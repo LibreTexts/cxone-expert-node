@@ -16,7 +16,7 @@ import {
     GetUserSearchParams,
     GetUserSearchResponse
   } from "../types";
-import { getTld, getAuth } from "../utils";
+import { getTld, getAuth, getHeaders } from "../utils";
 import Auth from "./auth";
 import Requests from "./requests";
 
@@ -46,7 +46,8 @@ export default class Users {
   ) {
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get<GetUsersResponse>(`/users`, {
       params: {
@@ -64,7 +65,8 @@ export default class Users {
     const userId = this.parseUserId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get<GetUserResponse>(`/users/${userId}`, {
       params: {
@@ -82,7 +84,8 @@ export default class Users {
     const userId = this.parseUserId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get<GetUserMetricsResponse>(`/users/${userId}/metrics`, {
       params: {
@@ -100,7 +103,8 @@ export default class Users {
     const userId = this.parseUserId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get<GetUserPropertiesResponse>(`/users/${userId}/properties`, {
       params: {
@@ -120,7 +124,8 @@ export default class Users {
     const key = this.parseKey(identifier);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get<GetUserPropertiesKeyResponse>(`/users/${userId}/properties/${key}`, {
       params: {
@@ -140,7 +145,8 @@ export default class Users {
     const key = this.parseKey(identifier);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get<GetUserPropertiesKeyInfoResponse>(`/users/${userId}/properties/${key}/info`, {
       params: {
@@ -156,7 +162,8 @@ export default class Users {
   ) {
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = new Requests(tld, auth, undefined, undefined, headers);
 
     const res = await requests.get<GetUserSearchResponse>(`/users/search`, {
       params: {

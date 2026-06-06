@@ -10,7 +10,7 @@ export default class Requests {
     private format: 'json' | 'xml' = 'json';
     private debug: Debugger;
 
-    constructor(tld?: string, authObject?: AuthObject, format: 'json' | 'xml' = 'json', debugEnabled?: boolean) {
+    constructor(tld?: string, authObject?: AuthObject, format: 'json' | 'xml' = 'json', debugEnabled?: boolean, customHeaders?: Record<string, string>) {
         this.debug = createDebugLogger('cxone-expert:requests', debugEnabled);
         if (!tld) {
             this.debug('TLD is required to initialize Requests module');
@@ -39,6 +39,7 @@ export default class Requests {
             headers: {
                 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
+                ...customHeaders,
                 ...authObject,
             },
         });

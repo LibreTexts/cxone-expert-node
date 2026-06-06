@@ -23,7 +23,7 @@ import {
     DelDescriptionFileParams,
     DelDescriptionFileResponse
   } from "../types";
-import { getTld, getAuth } from "../utils";
+import { getTld, getAuth, getHeaders } from "../utils";
 import Auth from "./auth";
 import Requests from "./requests";
 
@@ -59,7 +59,8 @@ export default class Files {
       const fileId = this.parseFileId(id);
       const tld = getTld(this.globals, funcArgs?.tld);
       const auth = getAuth(this.globals, funcArgs?.auth);
-      const requests = new Requests(tld, auth);
+      const headers = getHeaders(this.globals, funcArgs?.headers);
+      const requests = new Requests(tld, auth, undefined, undefined, headers);
   
       const res = await requests.get(`files/${fileId}`, {
         params: {

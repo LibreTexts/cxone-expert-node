@@ -37,6 +37,11 @@ export function getAuth(globals: ExpertGlobalOptions, authOverride?: AuthObject)
     throw new Error('Authentication is required. Configure auth in Expert constructor or pass auth to method call.');
 }
 
+export function getHeaders(globals: ExpertGlobalOptions, headersOverride?: Record<string, string>): Record<string, string> | undefined {
+    if (!globals.headers && !headersOverride) return undefined;
+    return { ...globals.headers, ...headersOverride };
+}
+
 export function joinPaths(...parts: string[]): string {
     // Remove leading/trailing slashes from each part and join with a single slash
     return parts.map(part => part.replace(/^\/|\/$/g, '')).join('/');
