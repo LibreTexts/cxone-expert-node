@@ -2,7 +2,9 @@ name: Publish Release to Registry
 
 on:
   release:
-    types: [published]
+    types: [ published ]
+  # support manual publishing if necessary (i.e., NPM changes)
+  workflow_dispatch:
 
 permissions:
   id-token: write  # Required for OIDC
