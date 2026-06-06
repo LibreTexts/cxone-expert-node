@@ -93,7 +93,7 @@ import {
   PutPageTagsParams,
   PutPageTagsResponse
 } from "../types";
-import { getTld, getAuth, createDebugLogger } from "../utils";
+import { getTld, getAuth, getHeaders, createDebugLogger } from "../utils";
 import Auth from "./auth";
 import Requests from "./requests";
 import { Buffer } from 'buffer';
@@ -150,8 +150,8 @@ export default class Pages {
    * @param auth - The authentication object
    * @returns A configured Requests instance
    */
-  private createRequests(tld?: string, auth?: AuthObject) {
-    return new Requests(tld, auth, 'json', this.globals.debug);
+  private createRequests(tld?: string, auth?: AuthObject, headers?: Record<string, string>) {
+    return new Requests(tld, auth, 'json', this.globals.debug, headers);
   }
 
   public async getPages(
@@ -161,7 +161,8 @@ export default class Pages {
     this.debug('getPages called');
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPagesResponse>(`/pages`, {
       params: {
@@ -181,7 +182,8 @@ export default class Pages {
     const id = this.parsePageId(idOrPath);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPageResponse>(`/pages/${id}`, {
       params: {
@@ -201,7 +203,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPageContentsResponse>(`/pages/${pageId}/contents`, {
       params: {
@@ -221,7 +224,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPageContentsExplainResponse>(`/pages/${pageId}/contents/explain`, {
       params: {
@@ -241,7 +245,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPageDiffResponse>(`/pages/${pageId}/diff`, {
       params: {
@@ -261,7 +266,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPageExplainResponse>(`/pages/${pageId}/explain`, {
       params: {
@@ -282,7 +288,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get(`/pages/${pageId}/export/${token}`, {
       params: {
@@ -306,7 +313,8 @@ export default class Pages {
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get(`/pages/${pageId}/export/${token}/${filenameId}`, {
       params: {
@@ -327,7 +335,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPageFilesSubPagesResponse>(`/pages/${pageId}/explain`, {
       params: {
@@ -347,7 +356,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPageFilesResponse>(`/pages/${pageId}/explain`, {
       params: {
@@ -369,7 +379,8 @@ export default class Pages {
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get(`/pages/${pageId}/files/${filenameId}`, {
       params: {
@@ -392,7 +403,8 @@ export default class Pages {
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get(`/pages/${pageId}/files/${filenameId}/description`, {
       params: {
@@ -415,7 +427,8 @@ export default class Pages {
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPageFileInfoResponse>(`/pages/${pageId}/files/${filenameId}/info`, {
       params: {
@@ -437,7 +450,8 @@ export default class Pages {
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPageFileRevisionsResponse>(`/pages/${pageId}/files/${filenameId}/revisions`, {
       params: {
@@ -457,7 +471,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPageFindResponse>(`/pages/${pageId}/find`, {
       params: {
@@ -477,7 +492,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPageInfoResponse>(`/pages/${pageId}/info`, {
       params: {
@@ -497,7 +513,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPageLinksResponse>(`/pages/${pageId}/links`, {
       params: {
@@ -517,7 +534,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get(`/pages/${pageId}/pdf`, {
       params: {
@@ -540,7 +558,8 @@ export default class Pages {
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get(`/pages/${pageId}/pdf/${filenameId}`, {
       params: {
@@ -561,7 +580,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPagePropertiesResponse>(`/pages/${pageId}/properties`, {
       params: {
@@ -583,7 +603,8 @@ export default class Pages {
     const keyId = this.parseKey(key);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<string>(`/pages/${pageId}/properties/${keyId}`, {
       params: {
@@ -605,7 +626,8 @@ export default class Pages {
     const keyId = this.parseKey(key);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPagePropertiesKeyInfoResponse>(`/pages/${pageId}/properties/${keyId}/info`, {
       params: {
@@ -625,7 +647,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPageRatingsResponse>(`/pages/${pageId}/ratings`, {
       params: {
@@ -645,7 +668,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPageRevisionsResponse>(`/pages/${pageId}/revisions`, {
       params: {
@@ -665,7 +689,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPageSubPagesResponse>(`/pages/${pageId}/subpages`, {
       params: {
@@ -685,7 +710,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPageTagsResponse>(`/pages/${pageId}/tags`, {
       params: {
@@ -705,7 +731,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPageTreeResponse>(`/pages/${pageId}/tree`, {
       params: {
@@ -723,7 +750,8 @@ export default class Pages {
     this.debug('getPageBook called');
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get(`/pages/book`, {
       params: {
@@ -746,7 +774,8 @@ export default class Pages {
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get(`/pages/book/${filename}`, {
       params: {
@@ -766,7 +795,8 @@ export default class Pages {
     this.debug('getPagesCsv called with params');
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get(`/pages/csv`, {
       params: {
@@ -785,7 +815,8 @@ export default class Pages {
     this.debug('getPagesPopular called for page.');
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.get<GetPagesPopularResponse>(`/pages/popular`, {
       params: {
@@ -806,7 +837,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.post<PostPageContentsResponse>(
       `/pages/${pageId}/contents`,
@@ -832,7 +864,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.put(
       `/pages/${pageId}/unorder`,
@@ -851,7 +884,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.del<DeletePageResponse>(
       `/pages/${pageId}`,
@@ -875,7 +909,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.del<PostPageAllowedResponse>(
       `/pages/${pageId}/allowed`,
@@ -899,7 +934,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.post<PostCopyPageResponse>(
       `/pages/${pageId}/copy`,
@@ -923,7 +959,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.post(
       `/pages/${pageId}/export`,
@@ -945,7 +982,8 @@ export default class Pages {
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.del(
       `/pages/${pageId}/files/${filenameId}`,
@@ -971,7 +1009,8 @@ export default class Pages {
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.head(
       `/pages/${pageId}/files/${filenameId}`,
@@ -998,7 +1037,8 @@ export default class Pages {
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.put<PutPageFileNameResponse>(
       `/pages/${pageId}/files/${filenameId}`,
@@ -1028,7 +1068,8 @@ export default class Pages {
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.del<DeletePageFileNameDescriptionResponse>(
       `/pages/${pageId}/files/${filenameId}/description`,
@@ -1054,7 +1095,8 @@ export default class Pages {
     const filenameId = this.parseFileName(filename);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.put<PutPageFileNameDescriptionResponse>(
       `/pages/${pageId}/files/${filenameId}/description`,
@@ -1082,7 +1124,8 @@ export default class Pages {
     const keyId = this.parseKey(key);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.put<PutPageFileNamePropertiesKeyResponse>(
       `/pages/${pageId}/files/${filenameId}/properties/${keyId}`,
@@ -1107,7 +1150,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.put(
       `/pages/${pageId}/import`,
@@ -1132,7 +1176,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.put<PutPageMoveResponse>(
       `/pages/${pageId}/move`,
@@ -1157,7 +1202,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.put(
       `/pages/${pageId}/order`,
@@ -1184,7 +1230,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.post<PostPagePropertiesResponse>(
       `/pages/${pageId}/properties`,
@@ -1214,7 +1261,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.put<PutPagePropertiesResponse>(
       `/pages/${pageId}/properties`,
@@ -1244,7 +1292,8 @@ export default class Pages {
     const keyId = this.parseKey(key);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.del(
       `/pages/${pageId}/properties/${keyId}`,
@@ -1270,7 +1319,8 @@ export default class Pages {
     const keyId = this.parseKey(key);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.put<PutPagePropertiesKeyResponse>(
       `/pages/${pageId}/properties/${keyId}`,
@@ -1295,7 +1345,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.post(
       `/pages/${pageId}/ratings`,
@@ -1320,7 +1371,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.post(
       `/pages/${pageId}/revert`,
@@ -1345,7 +1397,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.del(
       `/pages/${pageId}/security`,
@@ -1370,7 +1423,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.post<PostPageSecurityResponse>(
       `/pages/${pageId}/security`,
@@ -1396,7 +1450,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.put<PutPageSecurityResponse>(
       `/pages/${pageId}/security`,
@@ -1422,7 +1477,8 @@ export default class Pages {
     const pageId = this.parsePageId(id);
     const tld = getTld(this.globals, funcArgs?.tld);
     const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = this.createRequests(tld, auth);
+    const headers = getHeaders(this.globals, funcArgs?.headers);
+    const requests = this.createRequests(tld, auth, headers);
 
     const res = await requests.put<PutPageTagsResponse>(
       `/pages/${pageId}/tags`,

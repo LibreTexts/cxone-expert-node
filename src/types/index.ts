@@ -20,11 +20,13 @@ export type AuthConfig =
 
 export type BaseArgs = {
     auth?: AuthObject;
-    tld?: string
+    tld?: string;
+    headers?: Record<string, string>;
 }
 
 export type ExpertGlobalOptions = {
     tld?: string;
     auth?: AuthConfig;
     debug?: boolean;
+    headers?: Record<string, string>;
 }

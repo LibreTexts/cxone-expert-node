@@ -14,7 +14,7 @@ import {
     GetEventUserPageDetailParams,
     GetEventUserPageDetailResponse
 } from "../types";
-import { getTld, getAuth } from "../utils";
+import { getTld, getAuth, getHeaders } from "../utils";
 import Auth from "./auth";
 import Requests from "./requests";
 
@@ -49,7 +49,8 @@ export default class Events {
         const pageId = this.parsePageId(id);
         const tld = getTld(this.globals, funcArgs?.tld);
         const auth = getAuth(this.globals, funcArgs?.auth);
-        const requests = new Requests(tld, auth);
+        const headers = getHeaders(this.globals, funcArgs?.headers);
+        const requests = new Requests(tld, auth, undefined, undefined, headers);
         const res = await requests.get<GetPageHierarchyByIdResponse>(`events/page-hierarchy/${pageId}`, {
             params: {
                 ...reqArgs,
@@ -67,7 +68,8 @@ export default class Events {
         const pageId = this.parsePageId(id);
         const tld = getTld(this.globals, funcArgs?.tld);
         const auth = getAuth(this.globals, funcArgs?.auth);
-        const requests = new Requests(tld, auth);
+        const headers = getHeaders(this.globals, funcArgs?.headers);
+        const requests = new Requests(tld, auth, undefined, undefined, headers);
         const res = await requests.get<GetPageHierarchyDetailByIdResponse>(`events/page-hierarchy/${pageId}/${detailId}`, {
             params: {
                 ...reqArgs,
@@ -84,7 +86,8 @@ export default class Events {
         const pageId = this.parsePageId(id);
         const tld = getTld(this.globals, funcArgs?.tld);
         const auth = getAuth(this.globals, funcArgs?.auth);
-        const requests = new Requests(tld, auth);
+        const headers = getHeaders(this.globals, funcArgs?.headers);
+        const requests = new Requests(tld, auth, undefined, undefined, headers);
         const res = await requests.get<GetEventPageResponse>(`events/page/${pageId}`, {
             params: {
                 ...reqArgs,
@@ -102,7 +105,8 @@ export default class Events {
         const pageId = this.parsePageId(id);
         const tld = getTld(this.globals, funcArgs?.tld);
         const auth = getAuth(this.globals, funcArgs?.auth);
-        const requests = new Requests(tld, auth);
+        const headers = getHeaders(this.globals, funcArgs?.headers);
+        const requests = new Requests(tld, auth, undefined, undefined, headers);
         const res = await requests.get<GetEventPageDetailResponse>(`/events/page/${pageId}/${detailId}`, {
             params: {
                 ...reqArgs,
@@ -118,7 +122,8 @@ export default class Events {
     ){
         const tld = getTld(this.globals, funcArgs?.tld);
         const auth = getAuth(this.globals, funcArgs?.auth);
-        const requests = new Requests(tld, auth);
+        const headers = getHeaders(this.globals, funcArgs?.headers);
+        const requests = new Requests(tld, auth, undefined, undefined, headers);
         const res = await requests.get<GetEventUserPageResponse>(`/events/user-page/${this.parseUserId(userId)}`, {
             params: {
                 ...reqArgs,
@@ -135,7 +140,8 @@ export default class Events {
     ){
         const tld = getTld(this.globals, funcArgs?.tld);
         const auth = getAuth(this.globals, funcArgs?.auth);
-        const requests = new Requests(tld, auth);
+        const headers = getHeaders(this.globals, funcArgs?.headers);
+        const requests = new Requests(tld, auth, undefined, undefined, headers);
         const res = await requests.get<GetEventUserPageDetailResponse>(`/events/user-page/${this.parseUserId(userId)}/${detailId}`, {
             params: {
                 ...reqArgs,

@@ -27,11 +27,12 @@ export default class Expert {
     private _users?: Users;
     private _files?: Files;
 
-    constructor(options?: { tld?: string; auth?: AuthConfig; debug?: boolean }) {
+    constructor(options?: { tld?: string; auth?: AuthConfig; debug?: boolean; headers?: Record<string, string> }) {
         if (options) {
             if (options.tld) this.globals.tld = options.tld;
             if (options.auth) this.globals.auth = options.auth;
             if (options.debug !== undefined) this.globals.debug = options.debug;
+            if (options.headers) this.globals.headers = options.headers;
         }
         
         this.debug = createDebugLogger('cxone-expert-node', this.globals.debug);
