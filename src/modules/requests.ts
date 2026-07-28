@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { AuthObject } from "../types";
 import type { Debugger } from 'debug';
 import { createDebugLogger } from "../utils";
+import { ExpertError } from "../errors";
 
 const API_BASE_URL = '/@api/deki';
 
@@ -14,11 +15,11 @@ export default class Requests {
         this.debug = createDebugLogger('cxone-expert:requests', debugEnabled);
         if (!tld) {
             this.debug('TLD is required to initialize Requests module');
-            throw new Error('TLD is required');
+            throw ExpertError.config('TLD is required');
         }
         if (!authObject) {
             this.debug('Auth object is required to initialize Requests module');
-            throw new Error('Auth object is required');
+            throw ExpertError.config('Auth object is required');
         }
 
         // Ensure protocol is present
@@ -73,7 +74,7 @@ export default class Requests {
             },
             (error) => {
                 this.debug('✗ Request error:', error.message);
-                return Promise.reject(error);
+                return Promise.reject(ExpertError.fromAxios(error));
             }
         );
 
@@ -116,7 +117,7 @@ export default class Requests {
                 } else {
                     this.debug('✗ Request setup error:', error.message);
                 }
-                return Promise.reject(error);
+                return Promise.reject(ExpertError.fromAxios(error));
             }
         );
     }

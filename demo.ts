@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import Expert from "./dist/index.cjs";
+import Expert, { ExpertError } from "./dist/index.cjs";
 
 (async () => {
   console.log("=== CXone Expert SDK Demo ===\n");
@@ -22,8 +22,18 @@ import Expert from "./dist/index.cjs";
   try {
     const page1 = await expert1.pages.getPage(123);
     console.log("Successfully fetched page with automatic auth");
-  } catch (error: any) {
-    console.log("Error (expected if page doesn't exist):", error.message);
+  } catch (error: unknown) {
+    // ExpertError exposes stable fields without touching axios internals.
+    if (ExpertError.isExpertError(error)) {
+      console.log("ExpertError (expected if page doesn't exist):", {
+        kind: error.kind,
+        status: error.status,
+        url: error.url,
+        message: error.message,
+      });
+    } else {
+      console.log("Unexpected error:", error);
+    }
   }
 
   // ========================================

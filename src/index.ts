@@ -13,6 +13,7 @@ import { createDebugLogger } from './utils';
 import type { Debugger } from 'debug';
 
 export * from './types/index';
+export * from './errors';
 
 /**
  * Returns a copy of an AuthConfig safe for logging, with all credential material

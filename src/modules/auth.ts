@@ -1,4 +1,5 @@
 import { AuthObject, BrowserTokenParams, ServerTokenParams } from "../types";
+import { ExpertError } from "../errors";
 import { createHmac } from 'crypto';
 
 export default class Auth {
@@ -11,7 +12,7 @@ export default class Auth {
 
     public ServerToken({ key, secret, user }: ServerTokenParams) {
         if(!key || !secret || !user) {
-            throw new Error("Missing required parameters: key, secret, user");
+            throw ExpertError.config("Missing required parameters: key, secret, user");
         }
         
         const epoch = Math.floor(Date.now() / 1000);

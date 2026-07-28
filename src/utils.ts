@@ -1,5 +1,6 @@
 import { AuthObject, ExpertGlobalOptions } from "./types";
 import Auth from './modules/auth';
+import { ExpertError } from './errors';
 import createDebug from 'debug';
 
 export function createDebugLogger(namespace: string, enabled?: boolean) {
@@ -12,7 +13,7 @@ export function createDebugLogger(namespace: string, enabled?: boolean) {
 
 export function getTld(globals: ExpertGlobalOptions, tld?: string) {
     if (!tld && !globals.tld) {
-        throw new Error('TLD is required');
+        throw ExpertError.config('TLD is required');
     }
     return tld ?? globals.tld;
 }
@@ -34,7 +35,7 @@ export function getAuth(globals: ExpertGlobalOptions, authOverride?: AuthObject)
         }
     }
 
-    throw new Error('Authentication is required. Configure auth in Expert constructor or pass auth to method call.');
+    throw ExpertError.config('Authentication is required. Configure auth in Expert constructor or pass auth to method call.');
 }
 
 export function getHeaders(globals: ExpertGlobalOptions, headersOverride?: Record<string, string>): Record<string, string> | undefined {
