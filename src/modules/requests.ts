@@ -36,6 +36,11 @@ export default class Requests {
 
         this.axiosInstance = axios.create({
             baseURL: `${parsedTLD}${API_BASE_URL}`,
+            // Applied to every request; axios merges these with per-call params,
+            // so the Deki output format is defined in exactly one place.
+            params: {
+                'dream.out.format': this.format,
+            },
             headers: {
                 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
@@ -114,38 +119,27 @@ export default class Requests {
         );
     }
 
-    private getFormatParam() {
-        return {
-            'dream.out.format': this.format
-        }
-    }
-
     public async get<T>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-        return await this.axiosInstance.get<T>(url, {
-            ...config, params: {
-                ...config?.params,
-                ...this.getFormatParam()
-            }
-        });
+        return await this.axiosInstance.get<T>(url, config);
     }
 
     public async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-        return await this.axiosInstance.post<T>(url, data, { ...config });
+        return await this.axiosInstance.post<T>(url, data, config);
     }
 
     public async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-        return await this.axiosInstance.put<T>(url, data, { ...config });
+        return await this.axiosInstance.put<T>(url, data, config);
     }
 
     public async patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-        return await this.axiosInstance.patch<T>(url, data, { ...config });
+        return await this.axiosInstance.patch<T>(url, data, config);
     }
 
     public async del<T>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-        return await this.axiosInstance.delete<T>(url, { ...config });
+        return await this.axiosInstance.delete<T>(url, config);
     }
 
     public async head<T>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
-        return await this.axiosInstance.head<T>(url, { ...config });
+        return await this.axiosInstance.head<T>(url, config);
     }
 }

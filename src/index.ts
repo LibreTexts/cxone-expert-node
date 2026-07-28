@@ -14,6 +14,19 @@ import type { Debugger } from 'debug';
 
 export * from './types/index';
 
+/**
+ * Returns a copy of an AuthConfig safe for logging, with all credential material
+ * redacted: 'key' and 'secret' for server auth, 'key' for browser auth. The
+ * server 'key' is treated as sensitive because it is part of the token material.
+ */
+function redactAuthConfig(auth: AuthConfig | undefined): AuthConfig | undefined {
+    if (!auth) return auth;
+    if (auth.type === 'server') {
+        return { type: 'server', params: { ...auth.params, key: '[REDACTED]', secret: '[REDACTED]' } };
+    }
+    return { type: 'browser', params: { key: '[REDACTED]' } };
+}
+
 export default class Expert {
     private globals: ExpertGlobalOptions = {};
     private debug: Debugger;
@@ -37,24 +50,24 @@ export default class Expert {
         
         this.debug = createDebugLogger('cxone-expert-node', this.globals.debug);
         this.debug('Debug logging enabled for cxone-expert-node. This is not recommended for production use as credentials may be exposed in log files!');
-        this.debug('Expert instance created with options:', options);
+        this.debug('Expert instance created with options:', options ? { ...options, auth: redactAuthConfig(options.auth) } : options);
     }
 
     public setAuth(authConfig: AuthConfig): this {
         this.globals.auth = authConfig;
-        this.debug('Authentication configured:', authConfig);
+        this.debug('Authentication configured:', redactAuthConfig(authConfig));
         return this;
     }
 
     public configureServerAuth(params: ServerTokenParams): this {
         this.globals.auth = { type: 'server', params };
-        this.debug('Server authentication configured:', params);
+        this.debug('Server authentication configured:', redactAuthConfig(this.globals.auth));
         return this;
     }
 
     public configureBrowserAuth(params: BrowserTokenParams): this {
         this.globals.auth = { type: 'browser', params };
-        this.debug('Browser authentication configured:', params);
+        this.debug('Browser authentication configured:', redactAuthConfig(this.globals.auth));
         return this;
     }
 
