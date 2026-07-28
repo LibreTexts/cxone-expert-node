@@ -6,17 +6,11 @@ import {
     GetContextMapByIdParams,
     GetContextMapByIdResponse
 } from "../types";
-import { getTld, getAuth, getHeaders } from "../utils";
-import Auth from "./auth";
-import Requests from "./requests";
+import BaseModule from "./base";
 
-export default class contextMaps {
-    private globals: ExpertGlobalOptions;
-    private _auth?: Auth;
-
-    constructor(args: ExpertGlobalOptions, auth?: Auth) {
-        this.globals = args;
-        this._auth = auth;
+export default class contextMaps extends BaseModule {
+    constructor(globals: ExpertGlobalOptions) {
+        super(globals, "contextMaps");
     }
 
     private parseFileName(name: string) {
@@ -27,15 +21,14 @@ export default class contextMaps {
         reqArgs?: GetContextMapParams,
         funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs?.tld);
-        const auth = getAuth(this.globals, funcArgs?.auth);
-        const headers = getHeaders(this.globals, funcArgs?.headers);
-        const requests = new Requests(tld, auth, undefined, undefined, headers);
+        this.debug('getContextMaps called');
+        const requests = this.prepare(funcArgs);
         const res = await requests.get<GetContextMapResponse>(`/contextmaps`, {
           params: {
               ...reqArgs,
           },
         });
+        this.debug('getContextMaps completed successfully');
         return res.data;
     }
 
@@ -45,15 +38,14 @@ export default class contextMaps {
         reqArgs?: GetContextMapByIdParams,
         funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs?.tld);
-        const auth = getAuth(this.globals, funcArgs?.auth);
-        const headers = getHeaders(this.globals, funcArgs?.headers);
-        const requests = new Requests(tld, auth, undefined, undefined, headers);
+        this.debug('getContextMapsById called for:', language, id);
+        const requests = this.prepare(funcArgs);
         const res = await requests.get<GetContextMapByIdResponse>(`/contextmaps/${language}/${id}`, {
           params: {
               ...reqArgs,
           },
         });
+        this.debug('getContextMapsById completed successfully');
         return res.data;
     }
 

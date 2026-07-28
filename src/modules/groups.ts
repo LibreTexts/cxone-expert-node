@@ -8,17 +8,11 @@ import {
     GetGroupUserParams,
     GetGroupUserResponse
   } from "../types";
-  import { getTld, getAuth, getHeaders } from "../utils";
-  import Auth from "./auth";
-  import Requests from "./requests";
+import BaseModule from "./base";
 
-export default class Groups {
-  private globals: ExpertGlobalOptions;
-  private _auth?: Auth;
-
-  constructor(args: ExpertGlobalOptions, auth?: Auth) {
-    this.globals = args;
-    this._auth = auth;
+export default class Groups extends BaseModule {
+  constructor(globals: ExpertGlobalOptions) {
+    super(globals, "groups");
   }
 
   private parseGroupId(id: string | number) {
@@ -32,16 +26,15 @@ export default class Groups {
       reqArgs?: GetGroupsParams,
       funcArgs?: BaseArgs
   ) {
-      const tld = getTld(this.globals, funcArgs?.tld);
-      const auth = getAuth(this.globals, funcArgs?.auth);
-      const headers = getHeaders(this.globals, funcArgs?.headers);
-      const requests = new Requests(tld, auth, undefined, undefined, headers);
+      this.debug('getGroups called');
+      const requests = this.prepare(funcArgs);
 
       const res = await requests.get<GetGroupsResponse>(`/groups`, {
         params: {
             ...reqArgs,
         },
       });
+      this.debug('getGroups completed successfully');
       return res.data;
     }
 
@@ -50,17 +43,16 @@ export default class Groups {
       reqArgs?: GetGroupParams,
       funcArgs?: BaseArgs
     ) {
+      this.debug('getGroup called for:', id);
       const groupId = this.parseGroupId(id);
-      const tld = getTld(this.globals, funcArgs?.tld);
-      const auth = getAuth(this.globals, funcArgs?.auth);
-      const headers = getHeaders(this.globals, funcArgs?.headers);
-      const requests = new Requests(tld, auth, undefined, undefined, headers);
-  
+      const requests = this.prepare(funcArgs);
+
       const res = await requests.get<GetGroupResponse>(`/groups/${groupId}`, {
         params: {
           ...reqArgs,
         },
       });
+      this.debug('getGroup completed successfully');
       return res.data;
     }
 
@@ -69,16 +61,16 @@ export default class Groups {
         reqArgs?: GetGroupUserParams,
         funcArgs?: BaseArgs
       ) {
+        this.debug('getGroupUser called for:', id);
         const groupId = this.parseGroupId(id);
-        const tld = getTld(this.globals, funcArgs?.tld);
-        const auth = getAuth(this.globals, funcArgs?.auth);
-        const requests = new Requests(tld, auth);
-    
+        const requests = this.prepare(funcArgs);
+
         const res = await requests.get<GetGroupUserResponse>(`/groups/${groupId}/users`, {
           params: {
             ...reqArgs,
           },
         });
+        this.debug('getGroupUser completed successfully');
         return res.data;
       }
 }

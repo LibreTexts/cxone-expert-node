@@ -16,17 +16,11 @@ import {
     GetUserSearchParams,
     GetUserSearchResponse
   } from "../types";
-import { getTld, getAuth, getHeaders } from "../utils";
-import Auth from "./auth";
-import Requests from "./requests";
+import BaseModule from "./base";
 
-export default class Users {
-  private globals: ExpertGlobalOptions;
-  private _auth?: Auth;
-
-  constructor(args: ExpertGlobalOptions, auth?: Auth) {
-    this.globals = args;
-    this._auth = auth;
+export default class Users extends BaseModule {
+  constructor(globals: ExpertGlobalOptions) {
+    super(globals, "users");
   }
 
   private parseUserId(id: string | number) {
@@ -44,16 +38,15 @@ export default class Users {
     reqArgs?: GetUsersParams,
     funcArgs?: BaseArgs
   ) {
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    this.debug('getUsers called');
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<GetUsersResponse>(`/users`, {
       params: {
         ...reqArgs,
       },
     });
+    this.debug('getUsers completed successfully');
     return res.data;
   }
 
@@ -62,17 +55,16 @@ export default class Users {
     reqArgs?: GetUserParams,
     funcArgs?: BaseArgs
   ) {
+    this.debug('getUser called for:', id);
     const userId = this.parseUserId(id);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<GetUserResponse>(`/users/${userId}`, {
       params: {
         ...reqArgs,
       },
     });
+    this.debug('getUser completed successfully');
     return res.data;
   }
 
@@ -81,17 +73,16 @@ export default class Users {
     reqArgs?: GetUserMetricsParams,
     funcArgs?: BaseArgs
   ) {
+    this.debug('getUserMetrics called for:', id);
     const userId = this.parseUserId(id);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<GetUserMetricsResponse>(`/users/${userId}/metrics`, {
       params: {
         ...reqArgs,
       },
     });
+    this.debug('getUserMetrics completed successfully');
     return res.data;
   }
 
@@ -100,17 +91,16 @@ export default class Users {
     reqArgs?: GetUserPropertiesParams,
     funcArgs?: BaseArgs
   ) {
+    this.debug('getUserProperties called for:', id);
     const userId = this.parseUserId(id);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<GetUserPropertiesResponse>(`/users/${userId}/properties`, {
       params: {
         ...reqArgs,
       },
     });
+    this.debug('getUserProperties completed successfully');
     return res.data;
   }
 
@@ -120,18 +110,17 @@ export default class Users {
     reqArgs?: GetUserPropertiesKeyParams,
     funcArgs?: BaseArgs
   ) {
+    this.debug('getUserPropertiesKey called for:', id, identifier);
     const userId = this.parseUserId(id);
     const key = this.parseKey(identifier);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<GetUserPropertiesKeyResponse>(`/users/${userId}/properties/${key}`, {
       params: {
         ...reqArgs,
       },
     });
+    this.debug('getUserPropertiesKey completed successfully');
     return res.data;
   }
 
@@ -141,18 +130,17 @@ export default class Users {
     reqArgs?: GetUserPropertiesKeyInfoParams,
     funcArgs?: BaseArgs
   ) {
+    this.debug('getUserPropertiesKeyInfo called for:', id, identifier);
     const userId = this.parseUserId(id);
     const key = this.parseKey(identifier);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<GetUserPropertiesKeyInfoResponse>(`/users/${userId}/properties/${key}/info`, {
       params: {
         ...reqArgs,
       },
     });
+    this.debug('getUserPropertiesKeyInfo completed successfully');
     return res.data;
   }
 
@@ -160,16 +148,15 @@ export default class Users {
     reqArgs?: GetUserSearchParams,
     funcArgs?: BaseArgs
   ) {
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    this.debug('getUsersSearch called');
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<GetUserSearchResponse>(`/users/search`, {
       params: {
         ...reqArgs,
       },
     });
+    this.debug('getUsersSearch completed successfully');
     return res.data;
   }
 }

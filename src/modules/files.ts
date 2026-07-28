@@ -23,17 +23,11 @@ import {
     DelDescriptionFileParams,
     DelDescriptionFileResponse
   } from "../types";
-import { getTld, getAuth, getHeaders } from "../utils";
-import Auth from "./auth";
-import Requests from "./requests";
+import BaseModule from "./base";
 
-export default class Files {
-  private globals: ExpertGlobalOptions;
-  private _auth?: Auth;
-
-  constructor(args: ExpertGlobalOptions, auth?: Auth) {
-    this.globals = args;
-    this._auth = auth;
+export default class Files extends BaseModule {
+  constructor(globals: ExpertGlobalOptions) {
+    super(globals, "files");
   }
 
   private parseFileId(id: string | number) {
@@ -56,18 +50,17 @@ export default class Files {
       reqArgs?: GetFileParams,
       funcArgs?: BaseArgs
   ) {
+      this.debug('getFile called for:', id);
       const fileId = this.parseFileId(id);
-      const tld = getTld(this.globals, funcArgs?.tld);
-      const auth = getAuth(this.globals, funcArgs?.auth);
-      const headers = getHeaders(this.globals, funcArgs?.headers);
-      const requests = new Requests(tld, auth, undefined, undefined, headers);
-  
+      const requests = this.prepare(funcArgs);
+
       const res = await requests.get(`files/${fileId}`, {
         params: {
           ...reqArgs,
         },
         responseType: "stream",
       });
+      this.debug('getFile completed successfully');
       return res.data;
   }
 
@@ -77,11 +70,10 @@ export default class Files {
     reqArgs?: GetFileNameParams,
     funcArgs?: BaseArgs
   ) {
+    this.debug('getFileName called for:', id, filename);
     const fileId = this.parseFileId(id);
     const filenameId = this.parseFileName(filename);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get(`files/${fileId}/${filenameId}`, {
       params: {
@@ -89,6 +81,7 @@ export default class Files {
       },
       responseType: "stream",
     });
+    this.debug('getFileName completed successfully');
     return res.data;
   }
 
@@ -97,10 +90,9 @@ export default class Files {
     reqArgs?: GetFileDescriptionParams,
     funcArgs?: BaseArgs
   ) {
+    this.debug('getFileDescription called for:', id);
     const fileId = this.parseFileId(id);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get(`files/${fileId}/description`, {
       params: {
@@ -108,6 +100,7 @@ export default class Files {
       },
       responseType: "stream",
     });
+    this.debug('getFileDescription completed successfully');
     return res.data;
   }
 
@@ -116,16 +109,16 @@ export default class Files {
     reqArgs?: GetFileInfoParams,
     funcArgs?: BaseArgs
   ) {
+    this.debug('getFileInfo called for:', id);
     const fileId = this.parseFileId(id);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<GetFileInfoResponse>(`files/${fileId}/info`, {
       params: {
         ...reqArgs,
       }
     });
+    this.debug('getFileInfo completed successfully');
     return res.data;
   }
 
@@ -134,16 +127,16 @@ export default class Files {
     reqArgs?: GetFileRevisionsParams,
     funcArgs?: BaseArgs
   ) {
+    this.debug('getFileRevisions called for:', id);
     const fileId = this.parseFileId(id);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<GetFileRevisionsResponse>(`files/${fileId}/revisions`, {
       params: {
         ...reqArgs,
       }
     });
+    this.debug('getFileRevisions completed successfully');
     return res.data;
   }
 
@@ -152,16 +145,16 @@ export default class Files {
     reqArgs?: DeleteFileParams,
     funcArgs?: BaseArgs
   ) {
+    this.debug('deleteFile called for:', id);
     const fileId = this.parseFileId(id);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.del(`files/${fileId}`, {
       params: {
         ...reqArgs,
       }
     });
+    this.debug('deleteFile completed successfully');
     return res.data;
   }
 
@@ -170,16 +163,16 @@ export default class Files {
     reqArgs?: HeadFileParams,
     funcArgs?: BaseArgs
   ) {
+    this.debug('headFile called for:', id);
     const fileId = this.parseFileId(id);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.head(`files/${fileId}`, {
       params: {
         ...reqArgs,
       }
     });
+    this.debug('headFile completed successfully');
     return res.data;
   }
 
@@ -188,18 +181,18 @@ export default class Files {
     reqArgs?: PutFileParams,
     funcArgs?: BaseArgs
   ) {
+    this.debug('putFile called for:', id);
     const fileId = this.parseFileId(id);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const requests = this.prepare(funcArgs);
 
-    const res = await requests.put<PutFileResponse>(`files/${fileId}`, 
+    const res = await requests.put<PutFileResponse>(`files/${fileId}`,
       "",
       {
       params: {
         ...reqArgs,
       }
     });
+    this.debug('putFile completed successfully');
     return res.data;
   }
 
@@ -209,17 +202,17 @@ export default class Files {
     reqArgs?: DeleteFileNameParams,
     funcArgs?: BaseArgs
   ) {
+    this.debug('deleteFileName called for:', id, filename);
     const fileId = this.parseFileId(id);
     const filenameId = this.parseFileName(filename);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const requests = this.prepare(funcArgs);
 
-    const res = await requests.del(`files/${fileId}/${filenameId}`, { 
+    const res = await requests.del(`files/${fileId}/${filenameId}`, {
       params: {
         ...reqArgs,
       }
     });
+    this.debug('deleteFileName completed successfully');
     return res.data;
   }
 
@@ -229,17 +222,17 @@ export default class Files {
     reqArgs?: HeadFileNameParams,
     funcArgs?: BaseArgs
   ) {
+    this.debug('headFileName called for:', id, filename);
     const fileId = this.parseFileId(id);
     const filenameId = this.parseFileName(filename);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const requests = this.prepare(funcArgs);
 
-    const res = await requests.head(`files/${fileId}/${filenameId}`, {  
+    const res = await requests.head(`files/${fileId}/${filenameId}`, {
       params: {
         ...reqArgs,
       }
     });
+    this.debug('headFileName completed successfully');
     return res.data;
   }
 
@@ -249,39 +242,39 @@ export default class Files {
     reqArgs?: PutFileNameParams,
     funcArgs?: BaseArgs
   ) {
+    this.debug('putFileName called for:', id, filename);
     const fileId = this.parseFileId(id);
     const filenameId = this.parseFileName(filename);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const requests = this.prepare(funcArgs);
 
-    const res = await requests.put(`files/${fileId}/${filenameId}`, 
+    const res = await requests.put(`files/${fileId}/${filenameId}`,
       "",
       {
       params: {
         ...reqArgs,
       }
     });
+    this.debug('putFileName completed successfully');
     return res.data;
   }
-  
+
   public async postFileCopy(
     id: string | number,
     reqArgs?: PostFileCopyParams,
     funcArgs?: BaseArgs
   ) {
+    this.debug('postFileCopy called for:', id);
     const fileId = this.parseFileId(id);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const requests = this.prepare(funcArgs);
 
-    const res = await requests.post<PostFileCopyResponse>(`files/${fileId}/copy`, 
+    const res = await requests.post<PostFileCopyResponse>(`files/${fileId}/copy`,
       "",
       {
       params: {
         ...reqArgs,
-      } 
+      }
     });
+    this.debug('postFileCopy completed successfully');
     return res.data;
   }
 
@@ -290,16 +283,16 @@ export default class Files {
     reqArgs?: DelDescriptionFileParams,
     funcArgs?: BaseArgs
   ) {
+    this.debug('delDescriptionFile called for:', id);
     const fileId = this.parseFileId(id);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const requests = new Requests(tld, auth);
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.del<DelDescriptionFileResponse>(`files/${fileId}/description`, {
       params: {
         ...reqArgs,
       }
     });
+    this.debug('delDescriptionFile completed successfully');
     return res.data;
   }
 }

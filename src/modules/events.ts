@@ -14,17 +14,11 @@ import {
     GetEventUserPageDetailParams,
     GetEventUserPageDetailResponse
 } from "../types";
-import { getTld, getAuth, getHeaders } from "../utils";
-import Auth from "./auth";
-import Requests from "./requests";
+import BaseModule from "./base";
 
-export default class Events {
-    private globals: ExpertGlobalOptions;
-    private _auth?: Auth;
-
-    constructor(args: ExpertGlobalOptions, auth?: Auth) {
-        this.globals = args;
-        this._auth = auth;
+export default class Events extends BaseModule {
+    constructor(globals: ExpertGlobalOptions) {
+        super(globals, "events");
     }
 
     private parsePageId(id: string | number) {
@@ -46,35 +40,33 @@ export default class Events {
         reqArgs?: GetPageHierarchyByIdParams,
         funcArgs?: BaseArgs
     ){
+        this.debug('getPageHierarchyById called for:', id);
         const pageId = this.parsePageId(id);
-        const tld = getTld(this.globals, funcArgs?.tld);
-        const auth = getAuth(this.globals, funcArgs?.auth);
-        const headers = getHeaders(this.globals, funcArgs?.headers);
-        const requests = new Requests(tld, auth, undefined, undefined, headers);
+        const requests = this.prepare(funcArgs);
         const res = await requests.get<GetPageHierarchyByIdResponse>(`events/page-hierarchy/${pageId}`, {
             params: {
                 ...reqArgs,
             },
         });
+        this.debug('getPageHierarchyById completed successfully');
         return res.data;
     }
-    
+
     public async getPageHierarchyDetailById(
         id: string | number,
         detailId: string,
         reqArgs?: GetPageHierarchyDetailByIdParams,
         funcArgs?: BaseArgs
     ){
+        this.debug('getPageHierarchyDetailById called for:', id, detailId);
         const pageId = this.parsePageId(id);
-        const tld = getTld(this.globals, funcArgs?.tld);
-        const auth = getAuth(this.globals, funcArgs?.auth);
-        const headers = getHeaders(this.globals, funcArgs?.headers);
-        const requests = new Requests(tld, auth, undefined, undefined, headers);
+        const requests = this.prepare(funcArgs);
         const res = await requests.get<GetPageHierarchyDetailByIdResponse>(`events/page-hierarchy/${pageId}/${detailId}`, {
             params: {
                 ...reqArgs,
             },
         });
+        this.debug('getPageHierarchyDetailById completed successfully');
         return res.data;
     }
 
@@ -83,16 +75,15 @@ export default class Events {
         reqArgs?: GetEventPageParams,
         funcArgs?: BaseArgs
     ){
+        this.debug('getEventPage called for:', id);
         const pageId = this.parsePageId(id);
-        const tld = getTld(this.globals, funcArgs?.tld);
-        const auth = getAuth(this.globals, funcArgs?.auth);
-        const headers = getHeaders(this.globals, funcArgs?.headers);
-        const requests = new Requests(tld, auth, undefined, undefined, headers);
+        const requests = this.prepare(funcArgs);
         const res = await requests.get<GetEventPageResponse>(`events/page/${pageId}`, {
             params: {
                 ...reqArgs,
             },
         });
+        this.debug('getEventPage completed successfully');
         return res.data;
     }
 
@@ -102,16 +93,15 @@ export default class Events {
         reqArgs?: GetEventPageDetailParams,
         funcArgs?: BaseArgs
     ){
+        this.debug('getEventPageDetail called for:', id, detailId);
         const pageId = this.parsePageId(id);
-        const tld = getTld(this.globals, funcArgs?.tld);
-        const auth = getAuth(this.globals, funcArgs?.auth);
-        const headers = getHeaders(this.globals, funcArgs?.headers);
-        const requests = new Requests(tld, auth, undefined, undefined, headers);
+        const requests = this.prepare(funcArgs);
         const res = await requests.get<GetEventPageDetailResponse>(`/events/page/${pageId}/${detailId}`, {
             params: {
                 ...reqArgs,
             },
         });
+        this.debug('getEventPageDetail completed successfully');
         return res.data;
     }
 
@@ -120,15 +110,14 @@ export default class Events {
         reqArgs?: GetEventUserPageParams,
         funcArgs?: BaseArgs
     ){
-        const tld = getTld(this.globals, funcArgs?.tld);
-        const auth = getAuth(this.globals, funcArgs?.auth);
-        const headers = getHeaders(this.globals, funcArgs?.headers);
-        const requests = new Requests(tld, auth, undefined, undefined, headers);
+        this.debug('getEventUserPage called for:', userId);
+        const requests = this.prepare(funcArgs);
         const res = await requests.get<GetEventUserPageResponse>(`/events/user-page/${this.parseUserId(userId)}`, {
             params: {
                 ...reqArgs,
             },
         });
+        this.debug('getEventUserPage completed successfully');
         return res.data;
     }
 
@@ -138,15 +127,14 @@ export default class Events {
         reqArgs?: GetEventUserPageDetailParams,
         funcArgs?: BaseArgs
     ){
-        const tld = getTld(this.globals, funcArgs?.tld);
-        const auth = getAuth(this.globals, funcArgs?.auth);
-        const headers = getHeaders(this.globals, funcArgs?.headers);
-        const requests = new Requests(tld, auth, undefined, undefined, headers);
+        this.debug('getEventUserDetailPage called for:', userId, detailId);
+        const requests = this.prepare(funcArgs);
         const res = await requests.get<GetEventUserPageDetailResponse>(`/events/user-page/${this.parseUserId(userId)}/${detailId}`, {
             params: {
                 ...reqArgs,
             },
         });
+        this.debug('getEventUserDetailPage completed successfully');
         return res.data;
     }
 };

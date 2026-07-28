@@ -15,17 +15,11 @@ import {
     GetArchivePageInfoResponse,
     GetArchivePageSubPagesResponse
 } from "../types";
-import { getTld, getAuth, getHeaders } from "../utils";
-import Auth from "./auth";
-import Requests from "./requests";
+import BaseModule from "./base";
 
-export default class Archive {
-    private globals: ExpertGlobalOptions;
-    private _auth?: Auth;
-
-    constructor(args: ExpertGlobalOptions, auth?: Auth) {
-        this.globals = args;
-        this._auth = auth;
+export default class Archive extends BaseModule {
+    constructor(globals: ExpertGlobalOptions) {
+        super(globals, "archive");
     }
 
     private parseFileName(name: string) {
@@ -36,15 +30,14 @@ export default class Archive {
         reqArgs?: GetArchiveParams,
         funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs?.tld);
-        const auth = getAuth(this.globals, funcArgs?.auth);
-        const headers = getHeaders(this.globals, funcArgs?.headers);
-        const requests = new Requests(tld, auth, undefined, undefined, headers);
+        this.debug('getArchive called');
+        const requests = this.prepare(funcArgs);
         const res = await requests.get<GetArchiveResponse>(`/archive`, {
           params: {
               ...reqArgs,
           },
         });
+        this.debug('getArchive completed successfully');
         return res.data;
     }
 
@@ -52,15 +45,14 @@ export default class Archive {
         reqArgs?: GetArchiveFilesParams,
         funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs?.tld);
-        const auth = getAuth(this.globals, funcArgs?.auth);
-        const headers = getHeaders(this.globals, funcArgs?.headers);
-        const requests = new Requests(tld, auth, undefined, undefined, headers);
+        this.debug('getArchiveFiles called');
+        const requests = this.prepare(funcArgs);
         const res = await requests.get<GetArchiveFilesResponse>(`/archive/files`, {
           params: {
               ...reqArgs,
           },
         });
+        this.debug('getArchiveFiles completed successfully');
         return res.data;
     }
 
@@ -69,16 +61,15 @@ export default class Archive {
         reqArgs?: GetArchiveFileParams,
         funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs?.tld);
-        const auth = getAuth(this.globals, funcArgs?.auth);
-        const headers = getHeaders(this.globals, funcArgs?.headers);
-        const requests = new Requests(tld, auth, undefined, undefined, headers);
+        this.debug('getArchiveFile called for:', fileId);
+        const requests = this.prepare(funcArgs);
         const res = await requests.get(`/archive/files/${fileId}`, {
           params: {
               ...reqArgs,
           },
           responseType: "stream"
         });
+        this.debug('getArchiveFile completed successfully');
         return res.data;
     }
 
@@ -88,17 +79,16 @@ export default class Archive {
         reqArgs?: GetArchiveFileParams,
         funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs?.tld);
+        this.debug('getArchiveFileByName called for:', fileId, fileName);
         const parseFileName = this.parseFileName(fileName);
-        const auth = getAuth(this.globals, funcArgs?.auth);
-        const headers = getHeaders(this.globals, funcArgs?.headers);
-        const requests = new Requests(tld, auth, undefined, undefined, headers);
+        const requests = this.prepare(funcArgs);
         const res = await requests.get(`/archive/files/${fileId}/${parseFileName}`, {
           params: {
               ...reqArgs,
           },
           responseType: "stream"
         });
+        this.debug('getArchiveFileByName completed successfully');
         return res.data;
     }
 
@@ -107,15 +97,14 @@ export default class Archive {
         reqArgs?: GetArchiveFileParams,
         funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs?.tld);
-        const auth = getAuth(this.globals, funcArgs?.auth);
-        const headers = getHeaders(this.globals, funcArgs?.headers);
-        const requests = new Requests(tld, auth, undefined, undefined, headers);
+        this.debug('getArchiveFileInfo called for:', fileId);
+        const requests = this.prepare(funcArgs);
         const res = await requests.get<GetArchiveFileInfoResponse>(`/archive/files/${fileId}/info`, {
           params: {
               ...reqArgs,
           },
         });
+        this.debug('getArchiveFileInfo completed successfully');
         return res.data;
     }
 
@@ -123,15 +112,14 @@ export default class Archive {
         reqArgs?: GetArchivePagesParams,
         funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs?.tld);
-        const auth = getAuth(this.globals, funcArgs?.auth);
-        const headers = getHeaders(this.globals, funcArgs?.headers);
-        const requests = new Requests(tld, auth, undefined, undefined, headers);
+        this.debug('getArchivePages called');
+        const requests = this.prepare(funcArgs);
         const res = await requests.get<GetArchivePagesResponse>(`/archive/pages`, {
           params: {
               ...reqArgs,
           },
         });
+        this.debug('getArchivePages completed successfully');
         return res.data;
     }
 
@@ -140,15 +128,14 @@ export default class Archive {
         reqArgs?: GetArchivePageParams,
         funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs?.tld);
-        const auth = getAuth(this.globals, funcArgs?.auth);
-        const headers = getHeaders(this.globals, funcArgs?.headers);
-        const requests = new Requests(tld, auth, undefined, undefined, headers);
+        this.debug('getArchivePage called for:', pageId);
+        const requests = this.prepare(funcArgs);
         const res = await requests.get<GetArchivePageResponse>(`/archive/page/${pageId}`, {
           params: {
               ...reqArgs,
           },
         });
+        this.debug('getArchivePage completed successfully');
         return res.data;
     }
 
@@ -157,15 +144,14 @@ export default class Archive {
         reqArgs?: GetArchivePageParams,
         funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs?.tld);
-        const auth = getAuth(this.globals, funcArgs?.auth);
-        const headers = getHeaders(this.globals, funcArgs?.headers);
-        const requests = new Requests(tld, auth, undefined, undefined, headers);
+        this.debug('getArchivePageContents called for:', pageId);
+        const requests = this.prepare(funcArgs);
         const res = await requests.get<GetArchivePageContentsResponse>(`/archive/page/${pageId}/contents`, {
           params: {
               ...reqArgs,
           },
         });
+        this.debug('getArchivePageContents completed successfully');
         return res.data;
     }
 
@@ -174,15 +160,14 @@ export default class Archive {
         reqArgs?: GetArchivePageParams,
         funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs?.tld);
-        const auth = getAuth(this.globals, funcArgs?.auth);
-        const headers = getHeaders(this.globals, funcArgs?.headers);
-        const requests = new Requests(tld, auth, undefined, undefined, headers);
+        this.debug('getArchivePageInfo called for:', pageId);
+        const requests = this.prepare(funcArgs);
         const res = await requests.get<GetArchivePageInfoResponse>(`/archive/page/${pageId}/info`, {
           params: {
               ...reqArgs,
           },
         });
+        this.debug('getArchivePageInfo completed successfully');
         return res.data;
     }
 
@@ -191,15 +176,14 @@ export default class Archive {
         reqArgs?: GetArchivePageParams,
         funcArgs?: BaseArgs
     ) {
-        const tld = getTld(this.globals, funcArgs?.tld);
-        const auth = getAuth(this.globals, funcArgs?.auth);
-        const headers = getHeaders(this.globals, funcArgs?.headers);
-        const requests = new Requests(tld, auth, undefined, undefined, headers);
+        this.debug('getArchivePageSubPages called for:', pageId);
+        const requests = this.prepare(funcArgs);
         const res = await requests.get<GetArchivePageSubPagesResponse>(`/archive/page/${pageId}/subpages`, {
           params: {
               ...reqArgs,
           },
         });
+        this.debug('getArchivePageSubPages completed successfully');
         return res.data;
     }
 

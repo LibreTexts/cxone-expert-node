@@ -22,17 +22,11 @@ import {
     GetSiteTagParams,
     GetSiteTagResponse
   } from "../types";
-import { getTld, getAuth, getHeaders } from "../utils";
-import Auth from "./auth";
-import Requests from "./requests";
+import BaseModule from "./base";
 
-export default class Site {
-  private globals: ExpertGlobalOptions;
-  private _auth?: Auth;
-
-  constructor(args: ExpertGlobalOptions, auth?: Auth) {
-    this.globals = args;
-    this._auth = auth;
+export default class Site extends BaseModule {
+  constructor(globals: ExpertGlobalOptions) {
+    super(globals, "site");
   }
 
   private parsePageId(id: string | number) {
@@ -50,40 +44,37 @@ export default class Site {
     reqArgs?: GetSiteActivityParams,
     funcArgs?: BaseArgs
   ) {
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    this.debug('getSiteActivity called');
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<GetSiteActivityResponse>(`/site/activity`, {
       params: {
         ...reqArgs,
       },
     });
+    this.debug('getSiteActivity completed successfully');
     return res.data;
   }
 
   public async getSiteExportGroups(
     funcArgs?: BaseArgs
   ) {
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    this.debug('getSiteExportGroups called');
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<GetSiteExportGroupsResponse>(`/site/export/groups`);
+    this.debug('getSiteExportGroups completed successfully');
     return res.data;
   }
 
   public async getSiteExportUsers(
     funcArgs?: BaseArgs
   ) {
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    this.debug('getSiteExportUsers called');
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<GetSiteExportUsersResponse>(`/site/export/users`);
+    this.debug('getSiteExportUsers completed successfully');
     return res.data;
   }
 
@@ -92,11 +83,9 @@ export default class Site {
     reqArgs?: GetSiteSubPagesTagsParams,
     funcArgs?: BaseArgs
   ){
+    this.debug('getSiteSubPagesTags called for:', id);
     const pageId = this.parsePageId(id);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<GetSiteSubPagesTagsResponse>(
         `/site/nav/${pageId}/children`,
@@ -106,6 +95,7 @@ export default class Site {
             },
         }
     );
+    this.debug('getSiteSubPagesTags completed successfully');
     return res.data;
   }
 
@@ -114,11 +104,9 @@ export default class Site {
     reqArgs?: GetSiteFullNavTreeTagsParams,
     funcArgs?: BaseArgs
   ){
+    this.debug('getSiteFullNavTreeTags called for:', id);
     const pageId = this.parsePageId(id);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<string>(
         `/site/nav/${pageId}/full`,
@@ -128,6 +116,7 @@ export default class Site {
             },
         }
     );
+    this.debug('getSiteFullNavTreeTags completed successfully');
     return res.data;
   }
 
@@ -135,10 +124,8 @@ export default class Site {
     reqArgs?: GetSiteOperationsParams,
     funcArgs?: BaseArgs
   ){
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    this.debug('getSiteOperations called');
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<string>(
         `/site/operations`,
@@ -148,6 +135,7 @@ export default class Site {
             },
         }
     );
+    this.debug('getSiteOperations completed successfully');
     return res.data;
   }
 
@@ -155,10 +143,8 @@ export default class Site {
     reqArgs?: GetSitePropertiesParams,
     funcArgs?: BaseArgs
   ){
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    this.debug('getSiteProperties called');
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<GetSitePropertiesResponse>(
         `/site/properties`,
@@ -168,6 +154,7 @@ export default class Site {
             },
         }
     );
+    this.debug('getSiteProperties completed successfully');
     return res.data;
   }
 
@@ -176,11 +163,9 @@ export default class Site {
     reqArgs?: GetSiteKeyPropertiesParams,
     funcArgs?: BaseArgs
   ){
+    this.debug('GetSiteKeyProperties called for:', identifier);
     const key = this.parseKey(identifier);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get(
         `/site/properties/${key}`,
@@ -190,6 +175,7 @@ export default class Site {
             },
         }
     );
+    this.debug('GetSiteKeyProperties completed successfully');
     return res.data;
   }
 
@@ -198,11 +184,9 @@ export default class Site {
     reqArgs?: GetSiteKeyPropertiesInfoParams,
     funcArgs?: BaseArgs
   ){
+    this.debug('GetSiteKeyPropertiesInfo called for:', identifier);
     const key = this.parseKey(identifier);
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<GetSiteKeyPropertiesInfoResponse>(
         `/site/properties/${key}/info`,
@@ -212,6 +196,7 @@ export default class Site {
             },
         }
     );
+    this.debug('GetSiteKeyPropertiesInfo completed successfully');
     return res.data;
   }
 
@@ -219,10 +204,8 @@ export default class Site {
     reqArgs?: GetSiteQueryParams,
     funcArgs?: BaseArgs
   ){
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    this.debug('GetSiteQuery called');
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<GetSiteQueryResponse>(
         `/site/query`,
@@ -232,20 +215,20 @@ export default class Site {
             },
         }
     );
+    this.debug('GetSiteQuery completed successfully');
     return res.data;
   }
 
   public async GetSiteStatus(
     funcArgs?: BaseArgs
   ){
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    this.debug('GetSiteStatus called');
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<GetSiteStatusResponse>(
         `/site/status`
     );
+    this.debug('GetSiteStatus completed successfully');
     return res.data;
   }
 
@@ -253,10 +236,8 @@ export default class Site {
     reqArgs?: GetSiteTagsParams,
     funcArgs?: BaseArgs
   ){
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    this.debug('GetSiteTags called');
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<GetSiteTagsResponse>(
         `/site/tags`,
@@ -266,6 +247,7 @@ export default class Site {
             },
         }
     );
+    this.debug('GetSiteTags completed successfully');
     return res.data;
   }
 
@@ -273,10 +255,8 @@ export default class Site {
     reqArgs?: GetSiteTagParams,
     funcArgs?: BaseArgs
   ){
-    const tld = getTld(this.globals, funcArgs?.tld);
-    const auth = getAuth(this.globals, funcArgs?.auth);
-    const headers = getHeaders(this.globals, funcArgs?.headers);
-    const requests = new Requests(tld, auth, undefined, undefined, headers);
+    this.debug('GetSiteTag called');
+    const requests = this.prepare(funcArgs);
 
     const res = await requests.get<GetSiteTagResponse>(
         `/site/tag`,
@@ -286,6 +266,7 @@ export default class Site {
             },
         }
     );
+    this.debug('GetSiteTag completed successfully');
     return res.data;
   }
 
