@@ -338,7 +338,7 @@ export default class Pages {
     const headers = getHeaders(this.globals, funcArgs?.headers);
     const requests = this.createRequests(tld, auth, headers);
 
-    const res = await requests.get<GetPageFilesSubPagesResponse>(`/pages/${pageId}/explain`, {
+    const res = await requests.get<GetPageFilesSubPagesResponse>(`/pages/${pageId}/files,subpages`, {
       params: {
         ...reqArgs,
       },
@@ -359,7 +359,7 @@ export default class Pages {
     const headers = getHeaders(this.globals, funcArgs?.headers);
     const requests = this.createRequests(tld, auth, headers);
 
-    const res = await requests.get<GetPageFilesResponse>(`/pages/${pageId}/explain`, {
+    const res = await requests.get<GetPageFilesResponse>(`/pages/${pageId}/files`, {
       params: {
         ...reqArgs,
       },
@@ -1100,6 +1100,7 @@ export default class Pages {
 
     const res = await requests.put<PutPageFileNameDescriptionResponse>(
       `/pages/${pageId}/files/${filenameId}/description`,
+      "",
       {
         params: {
           ...reqArgs,

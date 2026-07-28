@@ -39,3 +39,11 @@ next-env.d.ts
 
 # JetBrains
 .idea
+
+# Agents
+agents/
+.agents/
+.claude/
+CLAUDE.md
+.codegraph/
+.mcp.json
