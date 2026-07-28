@@ -81,14 +81,16 @@ export default class Requests {
         this.axiosInstance.interceptors.response.use(
             (response) => {
                 this.debug(`← ${response.status} ${response.config.method?.toUpperCase()} ${response.config.url}`);
-                if (response.data && response.headers['content-type']?.includes('application/json')) {
+                const contentType = response.headers['content-type'];
+                const contentTypeStr = typeof contentType === 'string' ? contentType : '';
+                if (response.data && contentTypeStr.includes('application/json')) {
                     const dataStr = JSON.stringify(response.data);
                     if (dataStr.length > 200) {
                         this.debug('  Response:', dataStr.substring(0, 200) + '... (truncated)');
                     } else {
                         this.debug('  Response:', dataStr);
                     }
-                } else if (response.headers['content-type']?.includes('text/')) {
+                } else if (contentTypeStr.includes('text/')) {
                     this.debug('  Response: [text content]');
                 } else if (response.data) {
                     this.debug('  Response: [binary content]');
