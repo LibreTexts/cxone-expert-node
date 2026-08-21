@@ -251,13 +251,13 @@ export type GetPagePropertiesResponse = {
   property?: Partial<PageProperty> | Partial<PageProperty>[] | "";
 }
 
-export type GetPagePropertiesKeyParams = BaseQueryParams;
+export type GetPagePropertiesByKeyParams = BaseQueryParams;
 
-export type GetPagePropertiesKeyInfoParams = {
+export type GetPagePropertiesByKeyInfoParams = {
   contentcutoff?: number;
 } & BaseQueryParams;
 
-export type GetPagePropertiesKeyInfoResponse = Partial<PageProperty> | Partial<PageProperty>[] | "";
+export type GetPagePropertiesByKeyInfoResponse = Partial<PageProperty> | Partial<PageProperty>[] | "";
 
 export type GetPageRatingsParams = BaseQueryParams;
 
@@ -426,13 +426,13 @@ export type PutPageFileNameDescriptionResponse = Partial<PageFile> & {
   };
 
 
-export type PutPageFileNamePropertiesKeyParams = {
+export type PutPageFileNamePropertiesByKeyParams = {
   description?: string;
   etag?: string;
   abort?: "never" | "modified" | "exists";
 } & BaseQueryParams;
 
-export type PutPageFileNamePropertiesKeyResponse = PageProperty;
+export type PutPageFileNamePropertiesByKeyResponse = PageProperty;
 
 export type PutPageImportParams = {
   behavior?: "sync" | "async";
@@ -475,15 +475,15 @@ export type PutPagePropertiesResponse = {
   }
 };
 
-export type DeletePagePropertiesKeyParams = BaseQueryParams;
+export type DeletePagePropertiesByKeyParams = BaseQueryParams;
 
-export type PutPagePropertiesKeyParams = {
+export type PutPagePropertiesByKeyParams = {
   abort?: "never" | "modified" | "exists";
   description?: string;
   etag?: string;
 } & BaseQueryParams;
 
-export type PutPagePropertiesKeyResponse = PageProperty;
+export type PutPagePropertiesByKeyResponse = PageProperty;
 
 export type PostPageRatingsParams = {
   score: number;
