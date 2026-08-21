@@ -23,17 +23,6 @@ export default class Users extends BaseModule {
     super(globals, "users");
   }
 
-  private parseUserId(id: string | number) {
-    if (typeof id === "number") {
-      return id.toString();
-    }
-    return `=${encodeURIComponent(encodeURIComponent(id))}`;
-  }
-
-  private parseKey(key: string) {
-    return encodeURIComponent(encodeURIComponent(key));
-  }
-
   public async getUsers(
     reqArgs?: GetUsersParams,
     funcArgs?: BaseArgs

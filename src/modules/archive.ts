@@ -22,10 +22,6 @@ export default class Archive extends BaseModule {
         super(globals, "archive");
     }
 
-    private parseFileName(name: string) {
-        return `=${encodeURIComponent(encodeURIComponent(name))}`;
-    }
-
     public async getArchive(
         reqArgs?: GetArchiveParams,
         funcArgs?: BaseArgs

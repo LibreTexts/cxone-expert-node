@@ -21,20 +21,6 @@ export default class Events extends BaseModule {
         super(globals, "events");
     }
 
-    private parsePageId(id: string | number) {
-        if (typeof id === "number") {
-          return id.toString();
-        }
-        return `=${encodeURIComponent(encodeURIComponent(id))}`;
-    }
-
-    private parseUserId(id: string | number) {
-        if (typeof id === "number") {
-          return id.toString();
-        }
-        return `=${encodeURIComponent(encodeURIComponent(id))}`;
-      }
-
     public async getPageHierarchyById(
         id: string | number,
         reqArgs?: GetPageHierarchyByIdParams,
