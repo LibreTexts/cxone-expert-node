@@ -343,55 +343,10 @@ export type PostPageContentsParams = {
 }
 
 export type PostPageContentsResponse = {
-  edit: {
-    "@status": "success" | "conflict";
-    page: {
-      "@id": number;
-      "@href": string;
-      title: string;
-      path: string;
-    };
-    "page.base": {
-      "@id": number;
-      "@revision": number;
-      "@href": string;
-      title: string;
-      path: string;
-      "date.edited": string;
-      "user.author": {
-        "@id": number;
-        "@href": string;
-        nick: string;
-        username: string;
-        email: string;
-      };
-      description: string;
-      contents: {
-        "@type": string;
-        "@href": string;
-      };
-    };
-    "page.overwritten"?: {
-      "@id": number;
-      "@revision": number;
-      "@href": string;
-      title: string;
-      path: string;
-      "date.edited": string;
-      "user.author": {
-        "@id": number;
-        "@href": string;
-        nick: string;
-        username: string;
-        email: string;
-      };
-      description: string;
-      contents: {
-        "@type": string;
-        "@href": string;
-      };
-    };
-  };
+  "@status"?: "success" | "conflict";
+  page?: Partial<PageBase>;
+  "page.base"?: Partial<PageBase>;
+  "page.overwritten"?: Partial<PageBase>;
 }
 
 export type DeletePageParams = {
