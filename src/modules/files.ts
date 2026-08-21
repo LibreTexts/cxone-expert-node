@@ -30,21 +30,6 @@ export default class Files extends BaseModule {
     super(globals, "files");
   }
 
-  private parseFileId(id: string | number) {
-    if (typeof id === "number") {
-      return id.toString();
-    }
-    return `=${encodeURIComponent(encodeURIComponent(id))}`;
-  }
-
-  private parseFileName(name: string) {
-    return `=${encodeURIComponent(encodeURIComponent(name))}`;
-  }
-
-  private parseKey(key: string) {
-    return encodeURIComponent(encodeURIComponent(key));
-  }
-
   public async getFile(
       id: string | number,
       reqArgs?: GetFileParams,

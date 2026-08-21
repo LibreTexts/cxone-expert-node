@@ -15,13 +15,6 @@ export default class Groups extends BaseModule {
     super(globals, "groups");
   }
 
-  private parseGroupId(id: string | number) {
-    if (typeof id === "number") {
-      return id.toString();
-    }
-    return `=${encodeURIComponent(id)}`;
-  }
-
   public async getGroups(
       reqArgs?: GetGroupsParams,
       funcArgs?: BaseArgs

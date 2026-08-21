@@ -13,10 +13,6 @@ export default class contextMaps extends BaseModule {
         super(globals, "contextMaps");
     }
 
-    private parseFileName(name: string) {
-        return `=${encodeURIComponent(encodeURIComponent(name))}`;
-    }
-
     public async getContextMaps(
         reqArgs?: GetContextMapParams,
         funcArgs?: BaseArgs

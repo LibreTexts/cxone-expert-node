@@ -29,17 +29,6 @@ export default class Site extends BaseModule {
     super(globals, "site");
   }
 
-  private parsePageId(id: string | number) {
-    if (typeof id === "number") {
-      return id.toString();
-    }
-    return `=${encodeURIComponent(encodeURIComponent(id))}`;
-  }
-
-  private parseKey(key: string) {
-    return encodeURIComponent(encodeURIComponent(key));
-  }
-
   public async getSiteActivity(
     reqArgs?: GetSiteActivityParams,
     funcArgs?: BaseArgs

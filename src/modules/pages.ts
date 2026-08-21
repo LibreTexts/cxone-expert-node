@@ -100,39 +100,6 @@ export default class Pages extends BaseModule {
     super(globals, "pages");
   }
 
-  /**
-   * Converts a page identifier (number or string) into the format expected by the API.
-   * If the identifier is a number, it's simply converted to a string and returned as-is.
-   * If it's a page path, it's double URL-encoded and prefixed with '=' to indicate it's a path.
-   * @param id - The page identifier, which can be a number (page ID), or a page path.
-   * @returns A string formatted for use in API endpoints, either as a page ID or a double URL-encoded page path.
-   */
-  private parsePageId(id: string | number) {
-    if (typeof id === "number") {
-      return id.toString();
-    }
-    if (id === "home") {
-      return id;
-    }
-    return `=${encodeURIComponent(encodeURIComponent(id))}`;
-  }
-
-  /**
-   * Double URL-encodes a filename and prefixes it with '=' to indicate it's a filename in the API.
-   * @param name - The filename to be formatted for API use.
-   */
-  private parseFileName(name: string) {
-    return `=${encodeURIComponent(encodeURIComponent(name))}`;
-  }
-
-  /**
-   * Double URL-encodes a property key for use in API endpoints.
-   * @param name - The property key to be formatted for API use.
-   */
-  private parseKey(name: string) {
-    return `${encodeURIComponent(encodeURIComponent(name))}`;
-  }
-
 
   public async getPages(
     reqArgs?: GetPagesParams,
