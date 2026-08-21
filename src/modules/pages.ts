@@ -35,9 +35,9 @@ import {
   GetPagePdfFilenameParams,
   GetPagePropertiesParams,
   GetPagePropertiesResponse,
-  GetPagePropertiesKeyParams,
-  GetPagePropertiesKeyInfoParams,
-  GetPagePropertiesKeyInfoResponse,
+  GetPagePropertiesByKeyParams,
+  GetPagePropertiesByKeyInfoParams,
+  GetPagePropertiesByKeyInfoResponse,
   GetPageRatingsParams,
   GetPageRatingsResponse,
   GetPageRevisionsParams,
@@ -69,8 +69,8 @@ import {
   DeletePageFileNameDescriptionResponse,
   PutPageFileNameDescriptionParams,
   PutPageFileNameDescriptionResponse,
-  PutPageFileNamePropertiesKeyParams,
-  PutPageFileNamePropertiesKeyResponse,
+  PutPageFileNamePropertiesByKeyParams,
+  PutPageFileNamePropertiesByKeyResponse,
   PutPageImportParams,
   PutPageMoveParams,
   PutPageMoveResponse,
@@ -79,9 +79,9 @@ import {
   PostPagePropertiesResponse,
   PutPagePropertiesParams,
   PutPagePropertiesResponse,
-  DeletePagePropertiesKeyParams,
-  PutPagePropertiesKeyParams,
-  PutPagePropertiesKeyResponse,
+  DeletePagePropertiesByKeyParams,
+  PutPagePropertiesByKeyParams,
+  PutPagePropertiesByKeyResponse,
   PostPageRatingsParams,
   PostPageRevertParams,
   DeletePageSecurityParams,
@@ -461,6 +461,13 @@ export default class Pages extends BaseModule {
     return res.data;
   }
 
+  /**
+   * Gets the properties for a specific page.
+   * @param id - The ID of the page to get the properties for.
+   * @param reqArgs - Optional request parameters for the API call.
+   * @param funcArgs - Optional function arguments for the API call.
+   * @returns The response data from the API call.
+   */
   public async getPageProperties(
     id: string | number,
     reqArgs?: GetPagePropertiesParams,
@@ -479,13 +486,21 @@ export default class Pages extends BaseModule {
     return res.data;
   }
 
-  public async getPagePropertiesKey(
+  /**
+   * Gets a specific property for a page by key.
+   * @param id - The ID of the page to get the property for.
+   * @param key - The key of the property to get.
+   * @param reqArgs - Optional request parameters for the API call.
+   * @param funcArgs - Optional function arguments for the API call.
+   * @returns The response data from the API call.
+   */
+  public async getPagePropertiesByKey(
     id: string | number,
     key: string,
-    reqArgs?: GetPagePropertiesKeyParams,
+    reqArgs?: GetPagePropertiesByKeyParams,
     funcArgs?: BaseArgs
   ) {
-    this.debug('getPagePropertiesKey called for page:', id);
+    this.debug('getPagePropertiesByKey called for page:', id);
     const pageId = this.parsePageId(id);
     const keyId = this.parseKey(key);
     const requests = this.prepare(funcArgs);
@@ -495,27 +510,35 @@ export default class Pages extends BaseModule {
         ...reqArgs,
       },
     });
-    this.debug('getPagePropertiesKey successfully retrieved property key for page:', id);
+    this.debug('getPagePropertiesByKey successfully retrieved property key for page:', id);
     return res.data;
   }
 
-  public async getPagePropertiesKeyInfo(
+  /**
+   * Gets information about a specific property for a page by key.
+   * @param id - The ID of the page to get the property information for.
+   * @param key - The key of the property to get information about.
+   * @param reqArgs - Optional request parameters for the API call.
+   * @param funcArgs - Optional function arguments for the API call.
+   * @returns The response data from the API call.
+   */
+  public async getPagePropertiesByKeyInfo(
     id: string | number,
     key: string,
-    reqArgs?: GetPagePropertiesKeyInfoParams,
+    reqArgs?: GetPagePropertiesByKeyInfoParams,
     funcArgs?: BaseArgs
   ) {
-    this.debug('getPagePropertiesKeyInfo called for page:', id);
+    this.debug('getPagePropertiesByKeyInfo called for page:', id);
     const pageId = this.parsePageId(id);
     const keyId = this.parseKey(key);
     const requests = this.prepare(funcArgs);
 
-    const res = await requests.get<GetPagePropertiesKeyInfoResponse>(`/pages/${pageId}/properties/${keyId}/info`, {
+    const res = await requests.get<GetPagePropertiesByKeyInfoResponse>(`/pages/${pageId}/properties/${keyId}/info`, {
       params: {
         ...reqArgs,
       },
     });
-    this.debug('getPagePropertiesKeyInfo successfully retrieved property key info for page:', id);
+    this.debug('getPagePropertiesByKeyInfo successfully retrieved property key info for page:', id);
     return res.data;
   }
 
@@ -933,20 +956,29 @@ export default class Pages extends BaseModule {
     return res.data;
   }
 
-  public async putPageFileNamePropertiesKey(
+  /**
+   * Updates the properties of a specific file on a page by key. If the property does not exist, it will be created.
+   * @param id - The ID of the page to update the file properties for.
+   * @param filename - The name of the file to update the properties for.
+   * @param key - The key of the property to update.
+   * @param reqArgs - Optional request parameters for the API call.
+   * @param funcArgs - Optional function arguments for the API call.
+   * @returns The response data from the API call.
+   */
+  public async putPageFileNamePropertiesByKey(
     id: string | number,
     filename: string,
     key: string,
-    reqArgs?: PutPageFileNamePropertiesKeyParams,
+    reqArgs?: PutPageFileNamePropertiesByKeyParams,
     funcArgs?: BaseArgs
   ) {
-    this.debug('putPageFileNamePropertiesKey called for page:', id, 'filename:', filename, 'key:', key);
+    this.debug('putPageFileNamePropertiesByKey called for page:', id, 'filename:', filename, 'key:', key);
     const pageId = this.parsePageId(id);
     const filenameId = this.parseFileName(filename);
     const keyId = this.parseKey(key);
     const requests = this.prepare(funcArgs);
 
-    const res = await requests.put<PutPageFileNamePropertiesKeyResponse>(
+    const res = await requests.put<PutPageFileNamePropertiesByKeyResponse>(
       `/pages/${pageId}/files/${filenameId}/properties/${keyId}`,
       "",
       {
@@ -956,7 +988,7 @@ export default class Pages extends BaseModule {
       }
     );
 
-    this.debug('putPageFileNamePropertiesKey successfully updated property key:', key, 'for file:', filename, 'on page:', id);
+    this.debug('putPageFileNamePropertiesByKey successfully updated property key:', key, 'for file:', filename, 'on page:', id);
     return res.data;
   }
 
@@ -1029,23 +1061,34 @@ export default class Pages extends BaseModule {
     return res.data;
   }
 
+  /**
+   * Posts a new property for a specific page. The property value will be sent as text/plain in the request body.
+   * If the property already exists, it will not be overwritten unless `abort='never'` is specified in the request parameters.
+   * @param id - The ID of the page to post the property for.
+   * @param name - The name of the property to post.
+   * @param value - The value of the property to post.
+   * @param reqArgs - Optional request parameters for the API call.
+   * @param funcArgs - Optional function arguments for the API call.
+   * @returns The response data from the API call.
+   */
   public async postPageProperties(
     id: string | number,
-    propertyName: string,
-    propertyValue: string,
+    name: string,
+    value: string,
     reqArgs?: PostPagePropertiesParams,
     funcArgs?: BaseArgs
   ) {
-    this.debug('postPageProperties called for page:', id, 'property:', propertyName);
+    this.debug('postPageProperties called for page:', id, 'property:', name);
     const pageId = this.parsePageId(id);
     const requests = this.prepare(funcArgs);
 
     const res = await requests.post<PostPagePropertiesResponse>(
       `/pages/${pageId}/properties`,
-      propertyValue,
+      value,
       {
         headers: {
-          Slug: propertyName,
+          Slug: name,
+          'Content-Type': 'text/plain',
         },
         params: {
           ...reqArgs,
@@ -1053,27 +1096,38 @@ export default class Pages extends BaseModule {
       }
     );
 
-    this.debug('postPageProperties successfully created property:', propertyName, 'for page:', id);
+    this.debug('postPageProperties successfully created property:', name, 'for page:', id);
     return res.data;
   }
 
+  /**
+   * Updates the value of a property for a specific page. Value will be sent as text/plain in the request body.
+   * If the property does not exist, it will be created.
+   * @param id - The ID of the page to update the property for.
+   * @param name - The name of the property to update.
+   * @param value - The new value of the property.
+   * @param reqArgs - Optional request parameters for the API call.
+   * @param funcArgs - Optional function arguments for the API call.
+   * @returns The response data from the API call.
+   */
   public async putPageProperties(
     id: string | number,
-    propertyName: string,
-    propertyValue: string,
+    name: string,
+    value: string,
     reqArgs?: PutPagePropertiesParams,
     funcArgs?: BaseArgs
   ) {
-    this.debug('putPageProperties called for page:', id, 'property:', propertyName);
+    this.debug('putPageProperties called for page:', id, 'property:', name);
     const pageId = this.parsePageId(id);
     const requests = this.prepare(funcArgs);
 
     const res = await requests.put<PutPagePropertiesResponse>(
       `/pages/${pageId}/properties`,
-      propertyValue,
+      value,
       {
         headers: {
-          Slug: propertyName,
+          Slug: name,
+          'Content-Type': 'text/plain',
         },
         params: {
           ...reqArgs,
@@ -1081,17 +1135,25 @@ export default class Pages extends BaseModule {
       }
     );
 
-    this.debug('putPageProperties successfully updated property:', propertyName, 'for page:', id);
+    this.debug('putPageProperties successfully updated property:', name, 'for page:', id);
     return res.data;
   }
 
-  public async deletePagePropertiesKey(
+  /**
+   * Deletes a property for a specific page by key.
+   * @param id - The ID of the page to delete the property from.
+   * @param key - The key of the property to delete.
+   * @param reqArgs - Optional request parameters for the API call.
+   * @param funcArgs - Optional function arguments for the API call.
+   * @returns The response data from the API call.
+   */
+  public async deletePagePropertiesByKey(
     id: string | number,
     key: string,
-    reqArgs?: DeletePagePropertiesKeyParams,
+    reqArgs?: DeletePagePropertiesByKeyParams,
     funcArgs?: BaseArgs
   ) {
-    this.debug('deletePagePropertiesKey called for page:', id, 'key:', key);
+    this.debug('deletePagePropertiesByKey called for page:', id, 'key:', key);
     const pageId = this.parsePageId(id);
     const keyId = this.parseKey(key);
     const requests = this.prepare(funcArgs);
@@ -1105,32 +1167,47 @@ export default class Pages extends BaseModule {
       }
     );
 
-    this.debug('deletePagePropertiesKey successfully deleted property key:', key, 'for page:', id);
+    this.debug('deletePagePropertiesByKey successfully deleted property key:', key, 'for page:', id);
     return res.data;
   }
 
-  public async putPagePropertiesKey(
+  /**
+   * Updates the value of a property for a specific page by key. Value will be sent as text/plain in the request body.
+   * If the property does not exist, it will be created.
+   * Functionally equivalent to {@link putPageProperties} but uses the property key instead of the property name.
+   * @param id - The ID of the page to update the property for.
+   * @param key - The key of the property to update.
+   * @param value - The new value of the property.
+   * @param reqArgs - The request arguments for updating the property.
+   * @param funcArgs - The functional arguments for the request.
+   * @returns The response data from the update operation.
+   */
+  public async putPagePropertiesByKey(
     id: string | number,
     key: string,
-    reqArgs?: PutPagePropertiesKeyParams,
+    value: string,
+    reqArgs?: PutPagePropertiesByKeyParams,
     funcArgs?: BaseArgs
   ) {
-    this.debug('putPagePropertiesKey called for page:', id, 'key:', key);
+    this.debug('putPagePropertiesByKey called for page:', id, 'key:', key);
     const pageId = this.parsePageId(id);
     const keyId = this.parseKey(key);
     const requests = this.prepare(funcArgs);
 
-    const res = await requests.put<PutPagePropertiesKeyResponse>(
+    const res = await requests.put<PutPagePropertiesByKeyResponse>(
       `/pages/${pageId}/properties/${keyId}`,
-      "",
+      value,
       {
+        headers: {
+          'Content-Type': 'text/plain',
+        },
         params: {
           ...reqArgs,
         },
       }
     );
 
-    this.debug('putPagePropertiesKey successfully updated property key:', key, 'for page:', id);
+    this.debug('putPagePropertiesByKey successfully updated property key:', key, 'for page:', id);
     return res.data;
   }
 
