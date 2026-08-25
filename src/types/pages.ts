@@ -1,3 +1,4 @@
+import { Prettify } from ".";
 import {
   BaseQueryParams,
   PaginationQueryParams,
@@ -35,7 +36,7 @@ export type GetPageParams = {
   exclude?: string;
 } & BaseQueryParams;
 
-export type GetPageResponse = Partial<PageBase> & Partial<PageExtended>;
+export type GetPageResponse = Prettify<Partial<PageBase> & Partial<PageExtended>>;
 
 export type GetPageContentsParams = {
   overview?: boolean;

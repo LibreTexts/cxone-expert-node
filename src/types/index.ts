@@ -14,9 +14,9 @@ export * from './files';
 
 // Auth configuration types
 export type AuthConfig =
-  | { type: 'server', params: ServerTokenParams }
-  | { type: 'browser', params: BrowserTokenParams }
-  | null;
+    | { type: 'server', params: ServerTokenParams }
+    | { type: 'browser', params: BrowserTokenParams }
+    | null;
 
 export type BaseArgs = {
     auth?: AuthObject;
@@ -30,3 +30,9 @@ export type ExpertGlobalOptions = {
     debug?: boolean;
     headers?: Record<string, string>;
 }
+
+
+// Util types
+export type Prettify<T> = {
+    [K in keyof T]: T[K] extends object ? Prettify<T[K]> : T[K];
+} & {};   
