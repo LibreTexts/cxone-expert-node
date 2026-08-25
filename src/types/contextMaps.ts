@@ -4,6 +4,7 @@ import {
     RequestModeQueryParam,
   } from "./requests";
 import { ExpertUser, PageSecurity } from "./security";
+import type { OneOrMany } from "./index";
 
 
 export type GetContextMapParams = {
@@ -23,9 +24,9 @@ export type GetContextMapByIdParams = {
 
 export type GetContextMapResponse = {
     languages: {
-        language: string | string[];
+        language: OneOrMany<string>;
     };
-    contextmap?: Partial<ContextMap> | Partial<ContextMap>[];
+    contextmap?: OneOrMany<Partial<ContextMap>>;
 };
 
 export type GetContextMapByIdResponse = {

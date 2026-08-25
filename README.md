@@ -51,6 +51,45 @@ const customAuth = { 'X-Deki-Token': 'different-token' };
 const page2 = await expert.pages.getPage(456, { auth: customAuth });
 ```
 
+## Working with Deki's JSON quirks
+
+The Expert API is XML-first, and the JSON it returns when you ask for `dream.out.format=json`
+(this SDK's default) carries two artifacts of that translation:
+
+- An empty element becomes an empty string, not `null` or an absent key.
+- A repeated element is a bare object when there is one of it and an array when there are several.
+
+The response types name both cases (`Maybe<T>` and `OneOrMany<T>`), and the package exports
+`one`, `many`, and `text` so you do not have to branch on them by hand:
+
+```typescript
+import Expert, { one, many, text } from '@libretexts/cxone-expert-node';
+
+const page = await expert.pages.getPage(541831);
+
+// `tags.tag` is one tag, an array of tags, or "" - `many` always gives you an array
+for (const tag of many(page.tags && page.tags.tag)) {
+  console.log(tag.title);
+}
+
+// `one` unwraps a field that is either a value or "", giving undefined when empty
+const security = await expert.pages.getPageSecurity(541831);
+const restriction = one(security['permissions.page'])?.restriction;
+console.log(restriction && restriction['#text']); // 'Public'
+
+// A grant targets a user or a group, never both - checking one narrows the type
+for (const grant of many(security.grants && security.grants.grant)) {
+  console.log(grant.user ? grant.user.fullname : grant.group.groupname);
+}
+
+// `text` reads a scalar whether or not it picked up XML attributes
+text('true');                                // 'true'
+text({ '@owner': 'true', '#text': 'true' }); // 'true'
+```
+
+All three return `undefined` or `[]` for `""`, `null`, and `undefined` alike, so they are safe to
+apply to any optional field.
+
 ## Dependencies
 This package is designed to be lightweight and has only two dependencies: `axios` for making HTTP requests and `debug` for logging/troubleshooting.
 

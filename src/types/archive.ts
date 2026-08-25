@@ -4,6 +4,7 @@ import {
     RequestModeQueryParam,
   } from "./requests";
 import { ExpertUser, PageSecurity } from "./security";
+import type { OneOrMany } from "./index";
 
 export type GetArchiveParams = {
     authenticate?: boolean;
@@ -35,14 +36,14 @@ export type GetArchiveResponse = {
 export type GetArchiveFilesResponse = {
     "@count": string;
     "@offset": string;
-    "file.archive": ArchiveFile | ArchiveFile[];
+    "file.archive": OneOrMany<ArchiveFile>;
 };
 
 export type GetArchiveFileInfoResponse = ArchiveFile;
 
 export type GetArchivePagesResponse = {
     "@querycount": string;
-    "page.archive": ArchivePage | ArchivePage[];
+    "page.archive": OneOrMany<ArchivePage>;
 }
 
 export type GetArchivePageResponse = ArchivePage;
@@ -58,7 +59,7 @@ export type GetArchivePageContentsResponse = {
 };
 
 export type GetArchivePageSubPagesResponse = {
-    "page.archive"?: ArchivePage | ArchivePage[];
+    "page.archive"?: OneOrMany<ArchivePage>;
 }
 
 export type ArchiveFile = {

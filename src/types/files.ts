@@ -5,6 +5,7 @@ import {
   } from "./requests";
   import { ExpertUser, PageSecurity } from "./security";
   import { PageFile, DeletePageFileNameDescriptionResponse } from "./pages";
+import type { OneOrMany } from "./index";
 
 export type GetFileParams = {
     includeDeleted?: boolean;
@@ -48,7 +49,7 @@ export type GetFileRevisionsResponse = {
     "@count": string;
     "@totalcount": string;
     "@href": string;
-    file: Partial<PageFile> | Partial<PageFile>[] | "";
+    file: OneOrMany<Partial<PageFile>>;
 }
 
 export type DeleteFileParams = BaseQueryParams;

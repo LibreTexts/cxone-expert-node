@@ -4,6 +4,7 @@ import {
     RequestModeQueryParam,
   } from "./requests";
   import { ExpertUser, PageSecurity } from "./security";
+import type { Maybe, OneOrMany } from "./index";
 
 
 export type GetSiteActivityParams = {
@@ -84,15 +85,15 @@ type SortBy =
 
 export type GetSiteActivityResponse = {
     "@type"?: string;
-    entry?: Partial<entryBody> | Partial<entryBody>[] | "";
+    entry?: OneOrMany<Partial<entryBody>>;
 }
 
 export type GetSiteExportGroupsResponse = {
-    "group"?: Partial<groupBody> | Partial<groupBody>[] | "";
+    "group"?: OneOrMany<Partial<groupBody>>;
 }
 
 export type GetSiteExportUsersResponse = {
-    "user"?: Partial<userBody> | Partial<userBody>[] | "";
+    "user"?: OneOrMany<Partial<userBody>>;
 }
 
 export type GetSiteSubPagesTagsResponse = {
@@ -105,7 +106,7 @@ export type GetSiteSubPagesTagsResponse = {
 export type GetSitePropertiesResponse = {
     "@count"?: string;
     "@href"?: string;
-    property?: Partial<propertyBody> | Partial<propertyBody>[]| "";
+    property?: OneOrMany<Partial<propertyBody>>;
 }
 
 export type GetSiteKeyPropertiesInfoResponse = Partial<propertyBody>;
@@ -117,7 +118,7 @@ export type GetSiteQueryResponse = {
     "@querycount"?: string;
     "@count.recommendations"?: string;
     "@count"?: string;
-    result?: Partial<queryBody> | Partial<queryBody>[] | "";
+    result?: OneOrMany<Partial<queryBody>>;
 }
 
 export type GetSiteStatusResponse = {
@@ -126,7 +127,7 @@ export type GetSiteStatusResponse = {
 
 export type GetSiteTagsResponse = {
     "@count"?: string;
-    tag?: Partial<tagBody> | Partial<tagBody>[] | "";
+    tag?: OneOrMany<Partial<tagBody>>;
 }
 
 export type GetSiteTagResponse = {
@@ -136,7 +137,7 @@ export type GetSiteTagResponse = {
     pages?: {
         "@count"?: string;
         "@totalcount"?: string;
-        page?: Partial<PageTag> | Partial<PageTag>[] | "";
+        page?: OneOrMany<Partial<PageTag>>;
     }
     title?: string;
     type?: string;
@@ -215,11 +216,11 @@ export type groupBody = {
             '#text': string;
         }>;
     }>;
-    "service.authentication": object | "";
+    "service.authentication": Maybe<object>;
 }
 
 export type groupsBody = {
-    group: Partial<groupBody> | Partial<groupBody>[];
+    group: OneOrMany<Partial<groupBody>>;
 }
 
 type userBody = {
@@ -229,7 +230,7 @@ type userBody = {
     "date.lastlogin": string;
     email: string;
     fullname: string;
-    groups: groupsBody | "";
+    groups: Maybe<groupsBody>;
     "hash.email": string;
     language: string;
     "license.seat": Partial<{
@@ -244,7 +245,7 @@ type userBody = {
             '#text': string;
         }>
     }>;
-    "permissions.revoked": object | "";
+    "permissions.revoked": Maybe<object>;
     "permissions.user": Partial<{
         operations: Partial<{
             '@mask': string;
@@ -255,7 +256,7 @@ type userBody = {
             '#text': string;
         }>
     }>;
-    "service.authentication": object | "";
+    "service.authentication": Maybe<object>;
     status: string;
     timezone: string;
     "uri.avatar": string;

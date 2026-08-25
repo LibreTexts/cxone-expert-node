@@ -1,3 +1,6 @@
+import type { Group } from "./groups";
+import type { Maybe, OneOrMany, Scalar } from "./index";
+
 export type ExpertUser = {
     '@anonymous': string;
     '@virtual': string;
@@ -6,50 +9,100 @@ export type ExpertUser = {
     '@href': string;
     '@guid': string;
     'date.created': string;
-    'date.lastlogin': string;
+    /** Absent for users who have never signed in. */
+    'date.lastlogin'?: string;
     email: string;
+    /** The identifier at the external auth provider. Absent for local accounts and bots. */
+    externalname?: string;
     fullname: string;
     "hash.email": string;
-    "license.seat": string;
+    /** Plain `"true"`/`"false"`, or `{ "@owner": "true", "#text": "true" }` for the site owner. Read with `text()`. */
+    "license.seat": Scalar;
     nick: string;
-    password: {
+    password: Maybe<{
         "@exists": string
-    } | "";
+    }>;
     status: string;
-    timezone: string;
+    /** Only present when the account has an explicit timezone preference. */
+    timezone?: string;
     "uri.avatar": string;
-    "uri.gravatar": string
-    username: string | '#RESTRICTED'
+    "uri.gravatar": string;
+    /** `#RESTRICTED` when the caller lacks permission to see the real username. */
+    username: string;
 }
 
 export type PageSecurity = {
     '@href': string;
-    grants: {
-        grant: SecurityGrant | SecurityGrant[]
-    },
-    'permissions.effective': SecurityGrantPermissions | SecurityGrantPermissions[]
-    'permissions.page': SecurityGrantPermissions & SecurityGrantPermissionsRestriction | SecurityGrantPermissions & SecurityGrantPermissionsRestriction[]
-    'permissions.revoked': Record<string, { operations: SecurityGrantPermissionsOperations | SecurityGrantPermissionsOperations[] }>
+    grants: Maybe<{
+        grant?: OneOrMany<SecurityGrant>
+    }>;
+    'permissions.effective': Maybe<SecurityPermissions>;
+    'permissions.page': Maybe<SecurityPagePermissions>;
+    /**
+     * TODO: shape unconfirmed. Every observed response returns `""`; a sample
+     * with revoked permissions is needed to type the populated form.
+     */
+    'permissions.revoked': Maybe<{
+        operations?: OneOrMany<SecurityOperations>
+    }>;
 }
 
-export type SecurityGrant = {
+/**
+ * Shared by every permissions block. `permissions.effective` returns exactly
+ * this and nothing more.
+ */
+export type SecurityPermissions = {
+    operations: OneOrMany<SecurityOperations>;
+}
+
+/** `permissions.page`: operations plus the page's restriction. Carries no role. */
+export type SecurityPagePermissions = SecurityPermissions & {
+    restriction: Maybe<SecurityRestriction>;
+}
+
+/** A grant's permissions: operations plus the granted role. */
+export type SecurityGrantPermissions = SecurityPermissions & {
+    role: OneOrMany<SecurityRole>;
+}
+
+type SecurityGrantBase = {
     'date.modified': string;
     permissions: SecurityGrantPermissions;
-    user: ExpertUser
-    'user.modifiedby': ExpertUser
+    'user.modifiedby': Partial<ExpertUser>;
 }
 
-export type SecurityGrantPermissions = {
-    operations: SecurityGrantPermissionsOperations | SecurityGrantPermissionsOperations[]
-    role: SecurityRole | SecurityRole[]
+/** A grant to an individual user. */
+export type SecurityUserGrant = SecurityGrantBase & {
+    user: Partial<ExpertUser>;
+    group?: never;
 }
 
-export type SecurityGrantPermissionsOperations = {
+/** A grant to a group. Carries a slim group record, not the full group resource. */
+export type SecurityGroupGrant = SecurityGrantBase & {
+    group: Partial<Group>;
+    user?: never;
+}
+
+/**
+ * A permission grant. Targets a user or a group, never both, so `grant.user`
+ * narrows the union.
+ *
+ * @example
+ * ```ts
+ * for (const grant of many(security.grants && security.grants.grant)) {
+ *   const who = grant.user ? grant.user.fullname : grant.group.groupname;
+ * }
+ * ```
+ */
+export type SecurityGrant = SecurityUserGrant | SecurityGroupGrant;
+
+export type SecurityOperations = {
     '@mask': string;
     '#text': string;
 }
 
-export type SecurityGrantPermissionsRestriction = {
+/** The page's restriction level, e.g. `Public`, `Semi-Public`, `Private`. */
+export type SecurityRestriction = {
     '@id': string;
     '#text': string;
 }
@@ -59,3 +112,9 @@ export type SecurityRole = {
     '@href': string;
     '#text': string;
 }
+
+/** @deprecated Renamed to {@link SecurityOperations}. */
+export type SecurityGrantPermissionsOperations = SecurityOperations;
+
+/** @deprecated Renamed to {@link SecurityRestriction}. */
+export type SecurityGrantPermissionsRestriction = SecurityRestriction;

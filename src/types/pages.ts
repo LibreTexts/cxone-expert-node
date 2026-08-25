@@ -1,10 +1,10 @@
-import { Prettify } from ".";
+import type { Maybe, OneOrMany, Prettify } from ".";
 import {
   BaseQueryParams,
   PaginationQueryParams,
   RequestModeQueryParam,
 } from "./requests";
-import { ExpertUser, PageSecurity } from "./security";
+import type { ExpertUser, PageSecurity } from "./security";
 
 export type GetPagesParams = {
   startpage?: boolean;
@@ -21,8 +21,8 @@ export type GetPagesResponse = {
   "date.created"?: string;
   language?: string;
   namespace?: string;
-  path?: Partial<PagePath> | "";
-  subpages?: Partial<Subpages> | "";
+  path?: Maybe<Partial<PagePath>>;
+  subpages?: Maybe<Partial<Subpages>>;
   title?: string;
   "uri.ui"?: string;
 };
@@ -56,7 +56,7 @@ export type GetPageContentsResponse = {
   "@revision"?: string;
   "@type"?: string;
   "@title"?: string;
-  body?: string[] | "";
+  body?: Maybe<string[]>;
   head?: string;
   tail?: string;
 };
@@ -84,29 +84,29 @@ export type GetPageContentsExplainResponse = {
     "@elapsed"?: string;
     "@count-total"?: string;
     "@count-unique"?: string;
-    expr?: exprCall | exprCall[] | "";
-    import?: importCall | importCall[] | "";
-    page?: pageCall | pageCall[] | "";
-    property?: propertyCall | propertyCall[] | "";
-    template?: templateCall | templateCall[] | "";
+    expr?: OneOrMany<exprCall>;
+    import?: OneOrMany<importCall>;
+    page?: OneOrMany<pageCall>;
+    property?: OneOrMany<propertyCall>;
+    template?: OneOrMany<templateCall>;
   }
   "data-stats"?: {
-    entry?: Entry | Entry[] | "";
+    entry?: OneOrMany<Entry>;
   }
   "db-summary"?: {
     "@elapsed"?: string;
     "@count"?: string;
-    query?: Query | Query[] | "";
+    query?: OneOrMany<Query>;
   }
   "hs-summary"?: {
     "@elapsed"?: string;
     "@count"?: string;
-    query?: Query | Query[] | "";
+    query?: OneOrMany<Query>;
   }
   "redis-summary"?: {
     "@elapsed"?: string;
     "@count"?: string;
-    query?: Query | Query[] | "";
+    query?: OneOrMany<Query>;
   }
 }
 
@@ -147,15 +147,15 @@ export type GetPageFilesSubPagesResponse = {
   "@href"?: string;
   "@deleted"?: string;
   "date.created"?: string;
-  files?: {
-    "@count?": string;
-    "@href?": string;
-    file?: Partial<PageFile> | Partial<PageFile>[] | "";
-  } | "";
+  files?: Maybe<{
+    "@count"?: string;
+    "@href"?: string;
+    file?: OneOrMany<Partial<PageFile>>;
+  }>;
   language?: string;
   namespace?: string;
-  path?: Partial<PagePath> | "";
-  subpages?: Partial<page_subpage> | "";
+  path?: Maybe<Partial<PagePath>>;
+  subpages?: Maybe<Partial<page_subpage>>;
   title?: string;
   "uri.ui"?: string;
 }
@@ -167,7 +167,7 @@ export type GetPageFilesResponse = {
   "@offset": string;
   "@totalcount": string;
   "@href": string;
-  file?: Partial<PageFile> | Partial<PageFile>[] | "";
+  file?: OneOrMany<Partial<PageFile>>;
 }
 
 export type GetPageFileParams = {
@@ -199,7 +199,7 @@ export type GetPageFileRevisionsResponse = {
   "@count"?: string;
   "@totalcount"?: string;
   "@href"?: string;
-  file?: Partial<PageFile> | Partial<PageFile>[] | "";
+  file?: OneOrMany<Partial<PageFile>>;
 }
 
 export type GetPageFindParams = {
@@ -213,7 +213,7 @@ export type GetPageFindParams = {
 export type GetPageFindResponse = {
   "@count"?: string;
   "@totalcount"?: string;
-  page?: "" | (Partial<PageBase> & Partial<Tags>) | (Partial<PageBase> & Partial<Tags>)[];
+  page?: OneOrMany<(Partial<PageBase> & Partial<Tags>)>;
 }
 
 export type GetPageInfoParams = {
@@ -228,7 +228,7 @@ export type GetPageLinksParams = {
 
 export type GetPageLinksResponse = {
   "@count"?: string;
-  page?: Partial<PageBase> | Partial<PageBase>[] | "";
+  page?: OneOrMany<Partial<PageBase>>;
 }
 
 export type GetPagePdfParams = {
@@ -249,7 +249,7 @@ export type GetPagePropertiesParams = {
 export type GetPagePropertiesResponse = {
   "@count"?: string;
   "@href"?: string;
-  property?: Partial<PageProperty> | Partial<PageProperty>[] | "";
+  property?: OneOrMany<Partial<PageProperty>>;
 }
 
 export type GetPagePropertiesByKeyParams = BaseQueryParams;
@@ -258,7 +258,7 @@ export type GetPagePropertiesByKeyInfoParams = {
   contentcutoff?: number;
 } & BaseQueryParams;
 
-export type GetPagePropertiesByKeyInfoResponse = Partial<PageProperty> | Partial<PageProperty>[] | "";
+export type GetPagePropertiesByKeyInfoResponse = OneOrMany<Partial<PageProperty>>;
 
 export type GetPageRatingsParams = BaseQueryParams;
 
@@ -270,7 +270,7 @@ export type GetPageRevisionsParams = {
 } & BaseQueryParams & PaginationQueryParams;
 
 export type GetPageRevisionsResponse = {
-  page?: (Partial<PageBase> & Partial<PageExtended>) | (Partial<PageBase> & Partial<PageExtended>)[] | "";
+  page?: OneOrMany<(Partial<PageBase> & Partial<PageExtended>)>;
 }
 
 export type GetPageSecurityParams = BaseQueryParams & {
@@ -322,7 +322,7 @@ export type GetPagesPopularParams = BaseQueryParams & PaginationQueryParams;
 export type GetPagesPopularResponse = {
   "@count"?: string;
   "@href"?: string;
-  page?: (Partial<PageBase> & Partial<PageExtended>) | (Partial<PageBase> & Partial<PageExtended>)[] | "";
+  page?: OneOrMany<(Partial<PageBase> & Partial<PageExtended>)>;
 }
 
 export type PostPageContentsParams = {
@@ -357,7 +357,7 @@ export type DeletePageParams = {
 export type DeletePageResponse = {
   deletedPages?: {
     "@count"?: number;
-    page?: Partial<DeletedPage> | Partial<DeletedPage>[] | "";
+    page?: OneOrMany<Partial<DeletedPage>>;
   }
 }
 
@@ -367,7 +367,7 @@ export type PostPageAllowedParams = {
 
 export type PostPageAllowedResponse = {
   users?: {
-    user: Partial<Allowed> | Partial<Allowed>[] | "";
+    user: OneOrMany<Partial<Allowed>>;
   }
 }
 
@@ -381,10 +381,10 @@ export type PostCopyPageParams = {
 } & BaseQueryParams;
 
 export type PostCopyPageResponse = {
-  'pages.copied?': {
+  'pages.copied'?: Maybe<{
     "@count"?: string;
-    page?: Partial<PageBase> | Partial<PageBase>[] | "";
-  } | "";
+    page?: OneOrMany<Partial<PageBase>>;
+  }>;
 }
 
 export type DeletePageFileNameParams = BaseQueryParams;
@@ -411,7 +411,7 @@ export type DeletePageFileNameDescriptionResponse = Partial<PageFile> & {
     properties?: {
       "@count"?: string;
       "@href"?: string;
-      property?: Partial<PageProperty> | Partial<PageProperty>[] | "";
+      property?: OneOrMany<Partial<PageProperty>>;
     }
   };
 
@@ -422,7 +422,7 @@ export type PutPageFileNameDescriptionResponse = Partial<PageFile> & {
     properties?: {
       "@count"?: string;
       "@href"?: string;
-      property?: Partial<PageProperty> | Partial<PageProperty>[] | "";
+      property?: OneOrMany<Partial<PageProperty>>;
     }
   };
 
@@ -449,10 +449,10 @@ export type PutPageMoveParams = {
 } & BaseQueryParams;
 
 export type PutPageMoveResponse = {
-  "page.moved?": {
+  "page.moved"?: Maybe<{
     "@count"?: string;
-    page?: Partial<PageBase> | Partial<PageBase>[] | "";
-  } | "";
+    page?: OneOrMany<Partial<PageBase>>;
+  }>;
 };
 
 export type PutPageOrderParams = {
@@ -472,7 +472,7 @@ export type PutPagePropertiesResponse = {
   properties?: {
     "@count"?: string;
     "@href"?: string;
-    property?: Partial<PageProperty> | Partial<PageProperty>[] | "";
+    property?: OneOrMany<Partial<PageProperty>>;
   }
 };
 
@@ -533,8 +533,8 @@ export type Subpage = {
   "date.created": string;
   language: string;
   namespace: string;
-  path: Partial<PagePath> | "";
-  subpages: Subpages | "";
+  path: Maybe<Partial<PagePath>>;
+  subpages: Maybe<Subpages>;
   title: string;
   "uri.ui": string;
 };
@@ -554,70 +554,79 @@ export type PageBase = {
   "date.modified": string;
   language: string;
   namespace: string;
-  path: Partial<PagePath> | "";
-  restriction: string;
-  security: Partial<PageSecurity> | "";
+  path: Maybe<Partial<PagePath>>;
+  security: Maybe<Partial<PageSecurity>>;
   title: string;
   "uri.ui": string;
 };
 
 export type PageExtended = {
   "@unpublish": string;
-  aliases: {
-    [key: string]: string;
-  } | "";
-  comments: {
+  // TODO: populated shape unconfirmed; every observed response carries "@href" only.
+  aliases: Maybe<{
+    "@href"?: string;
+  }>;
+  comments: Maybe<{
     "@count"?: string;
     "@href"?: string;
-  } | "";
-  contents: Partial<Contents> | "";
-  "contents.alt": {
+  }>;
+  contents: Maybe<Partial<Contents>>;
+  "contents.alt": Maybe<{
     "@type": string;
     "@href": string;
-  } | "";
+  }>;
   "date.edited": string;
   description: string;
-  files: {
-    "@count?": string;
-    "@href?": string;
-    file?: Partial<PageFile> | Partial<PageFile>[] | "";
-  } | "";
-  inbound: {
+  files: Maybe<{
     "@count"?: string;
-    page?: Partial<PageBase> | Partial<PageBase>[] | "";
-  } | "";
+    "@href"?: string;
+    file?: OneOrMany<Partial<PageFile>>;
+  }>;
+  inbound: Maybe<{
+    "@count"?: string;
+    page?: OneOrMany<Partial<PageBase>>;
+  }>;
   "language.effective": string;
-  metrics: {
+  metrics: Maybe<{
     "metric.charcount"?: string;
     "metric.views"?: string;
-  } | "";
-  outbound: {
+  }>;
+  outbound: Maybe<{
     "@count"?: string;
-    page?: Partial<PageBase> | Partial<PageBase>[] | "";
-  } | "";
-  "page.parent": Partial<PageBase> | "";
+    page?: OneOrMany<Partial<PageBase>>;
+  }>;
+  "page.parent": Maybe<PageParent>;
   "page.redirectedfrom": string;
-  properties: {
+  properties: Maybe<{
     "@count"?: string;
     "@href"?: string;
-    property?: PageProperty[];
-  } | "";
-  rating: Partial<PageRating> | "";
-  revisions: Partial<PageRevision> | "";
-  "revisions.archive": Partial<PageRevision> | "";
-  subpages: {
+    property?: OneOrMany<Partial<PageProperty>>;
+  }>;
+  rating: Maybe<Partial<PageRating>>;
+  revisions: Maybe<Partial<PageRevision>>;
+  "revisions.archive": Maybe<Partial<PageRevision>>;
+  subpages: Maybe<{
     "@href"?: string;
-  } | "";
+  }>;
   summary: string;
-  tags: Partial<Tags> | "";
+  tags: Maybe<Partial<Tags>>;
   timeuuid: string;
-  "user.author": Partial<ExpertUser> | "";
-  "user.createdby": Partial<ExpertUser> | "";
+  "user.author": Maybe<Partial<ExpertUser>>;
+  "user.createdby": Maybe<Partial<ExpertUser>>;
+};
+
+/**
+ * A page's ancestor. Deki nests `page.parent` all the way up to Home, so each
+ * parent may carry a parent of its own.
+ */
+export type PageParent = Partial<PageBase> & {
+  "page.parent"?: Maybe<PageParent>;
 };
 
 export type PageRating = {
   "@score": string;
   "@count": string;
+  "@date": string;
   "@seated.score": string;
   "@seated.count": string;
   "@unseated.score": string;
@@ -643,18 +652,18 @@ export type PageFile = {
   "@res-rev-is-deleted": string;
   "@res-contents-id": string;
   "alt-text": string;
-  contents: Partial<Contents> | "";
-  "contents.preview": Partial<ContentsPreview> | Partial<ContentsPreview>[] | "";
+  contents: Maybe<Partial<Contents>>;
+  "contents.preview": OneOrMany<Partial<ContentsPreview>>;
   "date.created": string;
   "date.last-modified": string;
   description: string;
   filename: string;
-  "page.parent": Partial<PageBase> | "";
-  revisions: Partial<PageRevision> | "";
-  "user-action": {
+  "page.parent": Maybe<PageParent>;
+  revisions: Maybe<Partial<PageRevision>>;
+  "user-action": Maybe<{
     "@type"?: string;
-  } | "";
-  "user.createdBy": Partial<ExpertUser> | "";
+  }>;
+  "user.createdby": Maybe<Partial<ExpertUser>>;
 };
 
 export type PageTag = {
@@ -664,22 +673,23 @@ export type PageTag = {
   title: string;
   type: string;
   uri: string;
-  related: {
+  related: Maybe<{
     "@count"?: string;
-    page?: Partial<PageBase> | Partial<PageBase>[] | "";
-  } | "";
+    page?: OneOrMany<Partial<PageBase>>;
+  }>;
 };
 
 export type Contents = {
   "@type": string;
+  "@etag": string;
   "@size": string;
   "@width": string;
   "@height": string;
   "@href": string;
   "#text": string;
-  properties: {
-    property: Partial<PageProperty> | Partial<PageProperty>[] | "";
-  } | "";
+  properties: Maybe<{
+    property: OneOrMany<Partial<PageProperty>>;
+  }>;
 }
 
 export type ContentsPreview = {
@@ -694,7 +704,7 @@ export type ContentsPreview = {
 export type Tags = {
   "@count"?: string;
   "@href"?: string;
-  tag?: Partial<PageTag> | Partial<PageTag>[] | "";
+  tag?: OneOrMany<Partial<PageTag>>;
 }
 
 export type PageProperty = {
@@ -706,16 +716,16 @@ export type PageProperty = {
   "@resource-rev-is-deleted": string;
   "@revision": string;
   "change-description": string;
-  contents: Pick<Contents, '@href' | '@size' | '#text' | '@type'>;
+  contents: Partial<Pick<Contents, '@href' | '@size' | '#text' | '@type'>>;
   "date.modified": string;
-  "user.modified": ExpertUser;
+  "user.modified": Partial<ExpertUser>;
 }
 
 export type page_subpage = {
   "@totalcount": string;
   "@count": string;
   "@href": string;
-  "page.subpage": Partial<PageBase> | Partial<PageBase>[] | "";
+  "page.subpage": OneOrMany<Partial<PageBase>>;
 }
 
 export type exprCall = {
@@ -726,7 +736,7 @@ export type exprCall = {
   "@percent": string;
   "@count": string;
   "@mode": string;
-  function: functionCall | functionCall[] | "";
+  function: OneOrMany<functionCall>;
 }
 
 export type functionCall = {
@@ -738,7 +748,7 @@ export type functionCall = {
   "@count": string;
   "@mode": string;
   "@location": string;
-  expr: exprCall | exprCall[] | "";
+  expr: OneOrMany<exprCall>;
 }
 
 export type importCall = {
@@ -751,7 +761,7 @@ export type importCall = {
   "@mode": string;
   "@recursive": string;
   "@location": string;
-  import: importCall | importCall[] | "";
+  import: OneOrMany<importCall>;
 }
 
 export type pageCall = {
@@ -762,8 +772,8 @@ export type pageCall = {
   "@percent": string;
   "@count": string;
   "@mode": string;
-  import: importCall | importCall[] | "";
-  template: templateCall | templateCall[] | "";
+  import: OneOrMany<importCall>;
+  template: OneOrMany<templateCall>;
 }
 
 export type propertyCall = {
@@ -785,9 +795,9 @@ export type templateCall = {
   "@count": string;
   "@mode": string;
   "@location": string;
-  function: functionCall | functionCall[] | "";
-  property: propertyCall | propertyCall[] | "";
-  template: templateCall | templateCall[] | "";
+  function: OneOrMany<functionCall>;
+  property: OneOrMany<propertyCall>;
+  template: OneOrMany<templateCall>;
 }
 
 export type Entry = {
