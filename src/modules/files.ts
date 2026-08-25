@@ -107,6 +107,24 @@ export default class Files extends BaseModule {
     return res.data;
   }
 
+  public async getFileProperties(
+    id: string | number,
+    reqArgs?: GetFilePropertiesParams,
+    funcArgs?: BaseArgs
+  ) {
+    this.debug('getFileProperties called for:', id);
+    const fileId = this.parseFileId(id);
+    const requests = this.prepare(funcArgs);
+
+    const res = await requests.get(`files/${fileId}/properties`, {
+      params: {
+        ...reqArgs,
+      }
+    });
+    this.debug('getFileProperties completed successfully');
+    return res.data;
+  }
+
   public async getFileRevisions(
     id: string | number,
     reqArgs?: GetFileRevisionsParams,
@@ -240,6 +258,43 @@ export default class Files extends BaseModule {
       }
     });
     this.debug('putFileName completed successfully');
+    return res.data;
+  }
+
+  /**
+   * Updates the properties of a file.
+   * @param id The ID of the file.
+   * @param properties The properties to update as an XML string.
+   * @param reqArgs Optional request parameters.
+   * @param funcArgs Optional function arguments.
+   * @returns The response data.
+   * 
+   * @example
+   * ```ts
+   * await files.putFileProperties(123, '<properties><property name="mytestproperty"><contents type="text/plain">mytestvalue</contents></property></properties>');
+   * ```
+   */
+  public async putFileProperties(
+    id: string | number,
+    properties: string,
+    reqArgs?: Record<string, any>, // Endpoint doesn't have any specific req parameters, but we still want to allow for optional request parameters/axios config
+    funcArgs?: BaseArgs
+  ) {
+    this.debug('putFileProperties called for:', id);
+    const fileId = this.parseFileId(id);
+    const requests = this.prepare(funcArgs);
+
+    const res = await requests.put(`files/${fileId}/properties`,
+      properties,
+      {
+      params: {
+        headers: {
+          'Content-Type': 'application/xml'
+        },
+        ...reqArgs,
+      }
+    });
+    this.debug('putFileProperties completed successfully');
     return res.data;
   }
 
