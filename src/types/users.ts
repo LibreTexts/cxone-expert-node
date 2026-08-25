@@ -6,6 +6,7 @@ import {
   import { ExpertUser, PageSecurity } from "./security";
   import { Group } from "./groups";
   import { PageBase, PageProperty } from "./pages";
+import type { Maybe, OneOrMany } from "./index";
 
 
 export type GetUsersParams = {
@@ -26,14 +27,14 @@ export type GetUsersResponse = {
     "@totalcount"?: string;
     "@seateduserstotalcount"?: string;
     "@href": string;
-    user: Partial<userBody> | Partial<userBody>[] | "";
+    user: OneOrMany<Partial<userBody>>;
 }
 
 export type GetUserParams = {
     exclude?: string;
 } & BaseQueryParams;
 
-export type GetUserResponse = Partial<userBody> | "";
+export type GetUserResponse = Maybe<Partial<userBody>>;
 
 export type GetUserMetricsParams = BaseQueryParams;
 
@@ -56,7 +57,7 @@ export type GetUserPropertiesParams = {
 export type GetUserPropertiesResponse = {
     "@count"?: string;
     "@href"?: string;
-    property?: Partial<PageProperty> | Partial<PageProperty>[] | "";
+    property?: OneOrMany<Partial<PageProperty>>;
 }
 
 export type GetUserPropertiesKeyParams = BaseQueryParams;
@@ -90,12 +91,12 @@ export type GetUserSearchParams = {
 
 export type GetUserSearchResponse = {
     "@count"?: string;
-    user?: Partial<userBody> | Partial<userBody>[] | "";
+    user?: OneOrMany<Partial<userBody>>;
 }
 
 export type userBody = {
-    groups: {
-        group?: Partial<Group> | Partial<Group>[];
-    } | "";
-    "page.home": Partial<PageBase> | Partial<PageBase>[] | "";
-} & (Partial<ExpertUser> | Partial<ExpertUser>[])
+    groups: Maybe<{
+        group?: OneOrMany<Partial<Group>>;
+    }>;
+    "page.home": OneOrMany<Partial<PageBase>>;
+} & Partial<ExpertUser>;

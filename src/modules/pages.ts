@@ -84,6 +84,8 @@ import {
   PutPagePropertiesByKeyResponse,
   PostPageRatingsParams,
   PostPageRevertParams,
+  GetPageSecurityParams,
+  GetPageSecurityResponse,
   DeletePageSecurityParams,
   PostPageSecurityParams,
   PostPageSecurityResponse,
@@ -575,6 +577,33 @@ export default class Pages extends BaseModule {
       },
     });
     this.debug('getPageRevisions successfully retrieved revisions for page:', id);
+    return res.data;
+  }
+
+  /**
+   * Gets the security settings for a specific page: the page's own permissions
+   * and restriction, the effective permissions for the calling user, and the
+   * list of user and group grants.
+   * @param id - The ID or path of the page to get the security settings for.
+   * @param reqArgs - Optional request parameters for the API call.
+   * @param funcArgs - Optional function arguments for the API call.
+   * @returns The response data from the API call.
+   */
+  public async getPageSecurity(
+    id: string | number,
+    reqArgs?: GetPageSecurityParams,
+    funcArgs?: BaseArgs
+  ) {
+    this.debug('getPageSecurity called for page:', id);
+    const pageId = this.parsePageId(id);
+    const requests = this.prepare(funcArgs);
+
+    const res = await requests.get<GetPageSecurityResponse>(`/pages/${pageId}/security`, {
+      params: {
+        ...reqArgs,
+      },
+    });
+    this.debug('getPageSecurity successfully retrieved security settings for page:', id);
     return res.data;
   }
 

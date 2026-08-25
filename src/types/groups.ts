@@ -3,7 +3,8 @@ import {
     PaginationQueryParams,
     RequestModeQueryParam,
   } from "./requests";
-  import { ExpertUser, PageSecurity } from "./security";
+  import type { ExpertUser } from "./security";
+  import type { OneOrMany } from "./index";
 
 export type GetGroupsParams = {
     authProvider?: number;
@@ -33,7 +34,7 @@ export type GetGroupsResponse = {
     "@count": string;
     "@querycount": string;
     "@href": string;
-    "group": Partial<Group> | Partial<Group>[];
+    "group": OneOrMany<Partial<Group>>;
 };
 
 export type GetGroupResponse = Group;
@@ -42,7 +43,7 @@ export type GetGroupUserResponse = {
     "@count": string;
     "@querycount": string;
     "@href": string;
-    "user": Partial<ExpertUser> | Partial<ExpertUser>[] | "";
+    "user": OneOrMany<Partial<ExpertUser>>;
 };
 
 export type Group = {
