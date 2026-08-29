@@ -24,6 +24,7 @@ import {
     DelDescriptionFileResponse
   } from "../types";
 import BaseModule from "./base";
+import { ContentType, contentTypeHeader } from '../constants';
 
 export default class Files extends BaseModule {
   constructor(globals: ExpertGlobalOptions) {
@@ -287,13 +288,12 @@ export default class Files extends BaseModule {
     const res = await requests.put(`files/${fileId}/properties`,
       properties,
       {
-      params: {
-        headers: {
-          'Content-Type': 'application/xml'
+        headers: contentTypeHeader(ContentType.xml),
+        params: {
+          ...reqArgs,
         },
-        ...reqArgs,
       }
-    });
+    );
     this.debug('putFileProperties completed successfully');
     return res.data;
   }

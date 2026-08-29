@@ -15,6 +15,7 @@ import type { Debugger } from 'debug';
 export * from './types/index';
 export * from './errors';
 export * from './helpers';
+export * from './constants';
 
 /**
  * Returns a copy of an AuthConfig safe for logging, with all credential material

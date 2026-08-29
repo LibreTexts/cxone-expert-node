@@ -96,6 +96,7 @@ import {
 } from "../types";
 import BaseModule from "./base";
 import { Buffer } from 'buffer';
+import { ContentType, contentTypeHeader } from '../constants';
 
 export default class Pages extends BaseModule {
   constructor(globals: ExpertGlobalOptions) {
@@ -747,9 +748,7 @@ export default class Pages extends BaseModule {
       `/pages/${pageId}/contents`,
       content ?? "",
       {
-        headers: {
-          "Content-Type": "text/plain",
-        },
+        headers: contentTypeHeader(ContentType.text),
         params: {
           ...reqArgs,
         },
@@ -923,9 +922,7 @@ export default class Pages extends BaseModule {
       `/pages/${pageId}/files/${filenameId}`,
       file,
       {
-        headers: {
-          "Content-Type": "application/octet-stream",
-        },
+        headers: contentTypeHeader(ContentType.binary),
         params: {
           ...reqArgs,
         },
@@ -1117,7 +1114,7 @@ export default class Pages extends BaseModule {
       {
         headers: {
           Slug: name,
-          'Content-Type': 'text/plain',
+          ...contentTypeHeader(ContentType.text),
         },
         params: {
           ...reqArgs,
@@ -1156,7 +1153,7 @@ export default class Pages extends BaseModule {
       {
         headers: {
           Slug: name,
-          'Content-Type': 'text/plain',
+          ...contentTypeHeader(ContentType.text),
         },
         params: {
           ...reqArgs,
@@ -1227,9 +1224,7 @@ export default class Pages extends BaseModule {
       `/pages/${pageId}/properties/${keyId}`,
       value,
       {
-        headers: {
-          'Content-Type': 'text/plain',
-        },
+        headers: contentTypeHeader(ContentType.text),
         params: {
           ...reqArgs,
         },
@@ -1308,9 +1303,37 @@ export default class Pages extends BaseModule {
     return res.data;
   }
 
+  /**
+   * Incrementally modifies a page's security by adding and/or removing individual
+   * grants. Use {@link putPageSecurity} to replace the full grant list instead.
+   *
+   * Requires ADMIN access; the API returns 403 otherwise.
+   *
+   * @param id - The page ID, `"home"`, or a page path.
+   * @param content - The `<security>` document as an XML string. Sent as `application/xml`.
+   * @param reqArgs - Optional query parameters for the API call.
+   * @param funcArgs - Optional function arguments for the API call.
+   * @returns The updated security settings for the page.
+   *
+   * @example
+   * ```ts
+   * await pages.postPageSecurity(
+   *   123,
+   *   `<security>
+   *      <grants.added>
+   *        <grant><permissions><role>Contributor</role></permissions><user id="42"/></grant>
+   *      </grants.added>
+   *      <grants.removed>
+   *        <grant><permissions><role>Viewer</role></permissions><group id="7"/></grant>
+   *      </grants.removed>
+   *    </security>`,
+   *   { cascade: 'delta' }
+   * );
+   * ```
+   */
   public async postPageSecurity(
     id: string | number,
-    content?: string,
+    content: string,
     reqArgs?: PostPageSecurityParams,
     funcArgs?: BaseArgs
   ) {
@@ -1325,16 +1348,44 @@ export default class Pages extends BaseModule {
         params: {
           ...reqArgs,
         },
+        headers: contentTypeHeader(ContentType.xml),
       }
     );
 
-    this.debug('postPageSecurity successfully created security settings for page:', id);
+    this.debug('postPageSecurity successfully updated security settings for page:', id);
     return res.data;
   }
 
+  /**
+   * Replaces a page's security settings. The `grants` section replaces every
+   * existing grant on the page; use {@link postPageSecurity} to add or remove
+   * individual grants.
+   *
+   * Requires ADMIN access; the API returns 403 otherwise.
+   *
+   * @param id - The page ID, `"home"`, or a page path.
+   * @param content - The `<security>` document as an XML string. Sent as `application/xml`.
+   * @param reqArgs - Optional query parameters for the API call.
+   * @param funcArgs - Optional function arguments for the API call.
+   * @returns The updated security settings for the page.
+   *
+   * @example
+   * ```ts
+   * await pages.putPageSecurity(
+   *   123,
+   *   `<security>
+   *      <permissions.page><restriction>Semi-Public</restriction></permissions.page>
+   *      <grants>
+   *        <grant><permissions><role>Contributor</role></permissions><user id="42"/></grant>
+   *      </grants>
+   *    </security>`,
+   *   { cascade: 'absolute' }
+   * );
+   * ```
+   */
   public async putPageSecurity(
     id: string | number,
-    content?: string,
+    content: string,
     reqArgs?: PutPageSecurityParams,
     funcArgs?: BaseArgs
   ) {
@@ -1349,6 +1400,7 @@ export default class Pages extends BaseModule {
         params: {
           ...reqArgs,
         },
+        headers: contentTypeHeader(ContentType.xml),
       }
     );
 
