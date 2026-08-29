@@ -132,23 +132,38 @@ export function parseGroupId(id: string | number): string {
  * @throws {ExpertError} With `kind: 'config'` when `id` is not a positive integer.
  */
 export function parseFileId(id: string | number): string {
+    return String(parseNumericId(id, "file"));
+}
+
+/**
+ * Resolves a numeric identifier the way {@link parsePageId} resolves the
+ * numeric half of its input: numbers pass through when they are positive safe
+ * integers, digit-only strings are converted, and anything Number() would
+ * coerce loosely (decimals, hex, exponents, signs, whitespace-padded junk) is
+ * rejected.
+ * @param id - A positive integer ID, or a string of digits.
+ * @param resource - Resource name used in the error message, e.g. `"file"`.
+ * @returns The ID as a number.
+ * @throws {ExpertError} With `kind: 'config'` when `id` is not a positive integer.
+ */
+export function parseNumericId(id: string | number, resource: string): number {
     if (typeof id === "number") {
         if (!Number.isSafeInteger(id) || id <= 0) {
             throw ExpertError.config(
-                `Invalid file id: expected a positive integer, received ${id}.`
+                `Invalid ${resource} id: expected a positive integer, received ${id}.`
             );
         }
-        return String(id);
+        return id;
     }
 
-    const trimmed = id?.trim() ?? "";
+    const trimmed = typeof id === "string" ? id.trim() : "";
     const asNumber = /^\d+$/.test(trimmed) ? Number(trimmed) : Number.NaN;
     if (!Number.isSafeInteger(asNumber) || asNumber <= 0) {
         throw ExpertError.config(
-            `Invalid file id: expected a positive integer, received "${id}".`
+            `Invalid ${resource} id: expected a positive integer, received ${JSON.stringify(id)}.`
         );
     }
-    return String(asNumber);
+    return asNumber;
 }
 
 export function joinPaths(...parts: string[]): string {
@@ -191,3 +206,26 @@ export function parseKey(key: string): string {
     return encodeURIComponent(encodeURIComponent(key));
 }
 
+
+/**
+ * Encodes a page path for use in a **query string** value, such as the `to`
+ * parameter on `POST /pages/{pageid}/move`. Deki expects that value to arrive
+ * double URL-encoded (a space reaches the server as `%2520`, a slash as
+ * `%252f`), so this applies exactly one layer of encoding: axios serializes
+ * query params and applies the second layer on the way out.
+ *
+ * Do not use this for path segments — those never pass through the query
+ * serializer, so they need both layers up front (see {@link parsePageId}).
+ * @param path - The page path, for example `Category/Floating rocks`.
+ * @returns The single URL-encoded path.
+ * @throws {ExpertError} With `kind: 'config'` when `path` is empty or whitespace-only.
+ */
+export function parsePathParam(path: string): string {
+    const trimmed = path?.trim() ?? "";
+    if (trimmed.length === 0) {
+        throw ExpertError.config(
+            "Invalid page path: expected a path, received an empty string."
+        );
+    }
+    return encodeURIComponent(trimmed);
+}

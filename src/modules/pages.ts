@@ -72,8 +72,8 @@ import {
   PutPageFileNamePropertiesByKeyParams,
   PutPageFileNamePropertiesByKeyResponse,
   PutPageImportParams,
-  PutPageMoveParams,
-  PutPageMoveResponse,
+  PostPageMoveParams,
+  PostPageMoveResponse,
   PutPageOrderParams,
   PostPagePropertiesParams,
   PostPagePropertiesResponse,
@@ -95,6 +95,7 @@ import {
   PutPageTagsResponse
 } from "../types";
 import BaseModule from "./base";
+import { ExpertError } from "../errors";
 import { Buffer } from 'buffer';
 import { ContentType, contentTypeHeader } from '../constants';
 
@@ -818,23 +819,44 @@ export default class Pages extends BaseModule {
     return res.data;
   }
 
+  /**
+   * Copies a page to a new location. `to` is required by the endpoint and takes
+   * a plain path - the double encoding Deki requires is applied here.
+   * @param id - A page ID, page path, or the literal `"home"`.
+   * @param reqArgs - Copy destination and options.
+   * @param funcArgs - Optional per-call auth/tld/headers overrides.
+   * @returns The copied pages.
+   * @throws {ExpertError} With `kind: 'config'` when `to` is missing or blank.
+   */
   public async postPageCopied(
     id: string | number,
-    reqArgs?: PostCopyPageParams,
+    reqArgs: PostCopyPageParams,
     funcArgs?: BaseArgs
   ) {
-    this.debug('postPageCopied called for page:', id);
+    this.debug('postPageCopied called for page:', id, 'to:', reqArgs?.to);
+
+    // `to` is the only required param, and JavaScript callers can skip
+    // `reqArgs` entirely, so check it before anything dereferences it.
+    if (typeof reqArgs?.to !== 'string' || reqArgs.to.trim() === '') {
+      throw ExpertError.config(
+        'Invalid copy request: `to` must be a non-empty destination path.'
+      );
+    }
+
     const pageId = this.parsePageId(id);
     const requests = this.prepare(funcArgs);
+
+    // Deki wants the destination path double-encoded; axios supplies the
+    // second layer when it serializes the query string.
+    const params = {
+      ...reqArgs,
+      to: this.parsePathParam(reqArgs.to),
+    };
 
     const res = await requests.post<PostCopyPageResponse>(
       `/pages/${pageId}/copy`,
       "",
-      {
-        params: {
-          ...reqArgs,
-        },
-      }
+      { params }
     );
 
     this.debug('postPageCopied successfully copied page:', id);
@@ -1041,27 +1063,98 @@ export default class Pages extends BaseModule {
     return res.data;
   }
 
-  public async putPageMove(
+  /**
+   * Moves a page, and every page beneath it, to a new location. Deki leaves a
+   * redirect alias behind at the old path.
+   *
+   * Pass `to` for a full relocation, or `parentid`/`name`/`title` to reparent
+   * or rename the page where it sits. `to` takes a plain path - the double
+   * encoding Deki requires is applied here.
+   * @param id - A page ID, page path, or the literal `"home"`.
+   * @param reqArgs - Move target and options. At least one of `to`, `parentid`,
+   * `name`, or `title` must be supplied. `parentid` accepts a number or a
+   * string of digits.
+   * @param funcArgs - Optional per-call auth/tld/headers overrides.
+   * @returns The moved pages.
+   * @throws {ExpertError} With `kind: 'config'` when no move target is supplied,
+   * when `to`/`name`/`title` are blank, or when `parentid` is not a positive
+   * integer page ID.
+   */
+  public async postPageMove(
     id: string | number,
-    reqArgs?: PutPageMoveParams,
+    reqArgs: PostPageMoveParams,
     funcArgs?: BaseArgs
   ) {
-    this.debug('putPageMove called for page:', id, 'to:', reqArgs?.to);
+    this.debug('postPageMove called for page:', id, 'to:', reqArgs?.to);
+
+    if (!reqArgs) {
+      throw ExpertError.config(
+        'Invalid move request: supply at least one of `to`, `parentid`, `name`, or `title` in the request parameters.'
+      );
+    }
+
+    // Every move target is individually optional, but a move with none of them
+    // is a no-op the API rejects, so catch it before the request goes out.
+    // A supplied-but-junk target (empty string, zero, a fractional id) is the
+    // same rejection, so validate the values rather than their presence.
+    const isNonBlankString = (value: unknown) =>
+      typeof value === 'string' && value.trim() !== '';
+
+    for (const key of ['to', 'name', 'title'] as const) {
+      if (reqArgs?.[key] !== undefined && !isNonBlankString(reqArgs[key])) {
+        throw ExpertError.config(
+          `Invalid move request: \`${key}\` must be a non-empty string.`
+        );
+      }
+    }
+
+    // `parentid` follows the same rules as any other page ID: digit strings
+    // are accepted and coerced, everything else throws.
+    const parentid =
+      reqArgs?.parentid !== undefined
+        ? this.parseNumericId(reqArgs.parentid, 'parent page')
+        : undefined;
+
+    const hasTarget = (['to', 'parentid', 'name', 'title'] as const).some(
+      (key) => reqArgs?.[key] !== undefined
+    );
+    if (!hasTarget) {
+      throw ExpertError.config(
+        'Invalid move request: supply at least one of `to`, `parentid`, `name`, or `title`.'
+      );
+    }
+
     const pageId = this.parsePageId(id);
     const requests = this.prepare(funcArgs);
 
-    const res = await requests.put<PutPageMoveResponse>(
+    // Deki wants the destination path double-encoded; axios supplies the
+    // second layer when it serializes the query string.
+    const params = {
+      ...reqArgs,
+      ...(reqArgs?.to !== undefined && { to: this.parsePathParam(reqArgs.to) }),
+      ...(parentid !== undefined && { parentid }),
+    };
+
+    const res = await requests.post<PostPageMoveResponse>(
       `/pages/${pageId}/move`,
       "",
-      {
-        params: {
-          ...reqArgs,
-        },
-      }
+      { params }
     );
 
-    this.debug('putPageMove successfully moved page:', id);
+    this.debug('postPageMove successfully moved page:', id);
     return res.data;
+  }
+
+  /**
+   * @deprecated Use {@link Pages.postPageMove}. The move endpoint is a POST,
+   * not a PUT; this alias forwards to the corrected implementation.
+   */
+  public async putPageMove(
+    id: string | number,
+    reqArgs: PostPageMoveParams,
+    funcArgs?: BaseArgs
+  ) {
+    return this.postPageMove(id, reqArgs, funcArgs);
   }
 
   public async putPageOrder(
