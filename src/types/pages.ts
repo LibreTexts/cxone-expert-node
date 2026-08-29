@@ -371,8 +371,12 @@ export type PostPageAllowedResponse = {
   }
 }
 
+/**
+ * Query parameters for `POST /pages/{pageid}/copy`. `to` is required and takes
+ * a plain path such as `Category/Floating rocks` - it is encoded for you.
+ */
 export type PostCopyPageParams = {
-  to: string; 
+  to: string;
   title?: string;
   abort?: 'never' | 'exists';
   recursive?: boolean;
@@ -441,19 +445,32 @@ export type PutPageImportParams = {
   pageid?: number;
 }
 
-export type PutPageMoveParams = {
-  parentid?: number;
+/**
+ * Query parameters for `POST /pages/{pageid}/move`. Supply `to` for a full
+ * relocation, or `parentid`/`name`/`title` to reparent or rename in place.
+ * The `to` value is encoded for you - pass a plain path such as
+ * `Category/Floating rocks`.
+ */
+export type PostPageMoveParams = {
+  /** Parent page ID. A string of digits is accepted and coerced to a number. */
+  parentid?: number | string;
   name?: string;
   title?: string;
   to?: string;
 } & BaseQueryParams;
 
-export type PutPageMoveResponse = {
-  "page.moved"?: Maybe<{
+export type PostPageMoveResponse = {
+  "pages.moved"?: Maybe<{
     "@count"?: string;
     page?: OneOrMany<Partial<PageBase>>;
   }>;
 };
+
+/** @deprecated Use {@link PostPageMoveParams}. The move endpoint is a POST. */
+export type PutPageMoveParams = PostPageMoveParams;
+
+/** @deprecated Use {@link PostPageMoveResponse}. The move endpoint is a POST. */
+export type PutPageMoveResponse = PostPageMoveResponse;
 
 export type PutPageOrderParams = {
   afterid?: number;

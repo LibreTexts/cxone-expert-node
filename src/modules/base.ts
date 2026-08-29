@@ -1,5 +1,5 @@
 import { BaseArgs, ExpertGlobalOptions } from "../types";
-import { getTld, getAuth, getHeaders, createDebugLogger, parsePageId, parseFileName, parseKey, parseUserId, parseGroupId, parseFileId } from "../utils";
+import { getTld, getAuth, getHeaders, createDebugLogger, parsePageId, parseFileName, parseKey, parsePathParam, parseUserId, parseGroupId, parseFileId, parseNumericId } from "../utils";
 import Requests from "./requests";
 import type { Debugger } from "debug";
 
@@ -64,6 +64,16 @@ export default abstract class BaseModule {
   }
 
   /**
+   * Encodes a page path for use in a query-string value. Delegates to the
+   * shared {@link parsePathParam} helper.
+   * @param path - The page path to encode.
+   * @returns The single URL-encoded path; axios adds the second encoding layer.
+   */
+  protected parsePathParam(path: string): string {
+    return parsePathParam(path);
+  }
+
+  /**
    * Formats a user identifier for use in an endpoint path. Delegates to the
    * shared {@link parseUserId} helper.
    * @param id - A numeric user ID or a username.
@@ -91,5 +101,17 @@ export default abstract class BaseModule {
    */
   protected parseFileId(id: string | number): string {
     return parseFileId(id);
+  }
+
+  /**
+   * Resolves a numeric identifier used as a query-param value (rather than a
+   * path segment). Delegates to the shared {@link parseNumericId} helper, so
+   * digit strings are accepted and coerced the same way page IDs are.
+   * @param id - A positive integer ID, or a string of digits.
+   * @param resource - Resource name used in the error message, e.g. `"parent page"`.
+   * @returns The ID as a number.
+   */
+  protected parseNumericId(id: string | number, resource: string): number {
+    return parseNumericId(id, resource);
   }
 }
