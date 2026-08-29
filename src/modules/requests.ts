@@ -3,6 +3,7 @@ import { AuthObject } from "../types";
 import type { Debugger } from 'debug';
 import { createDebugLogger } from "../utils";
 import { ExpertError } from "../errors";
+import { ContentType, contentTypeHeader } from "../constants";
 
 const API_BASE_URL = '/@api/deki';
 
@@ -43,7 +44,7 @@ export default class Requests {
                 'dream.out.format': this.format,
             },
             headers: {
-                'Content-Type': 'application/json',
+                ...contentTypeHeader(ContentType.json),
                 'X-Requested-With': 'XMLHttpRequest',
                 ...customHeaders,
                 ...authObject,
@@ -62,7 +63,7 @@ export default class Requests {
                 if (config.params && Object.keys(config.params).length > 0) {
                     this.debug('  Query params:', JSON.stringify(config.params));
                 }
-                if (config.data && config.headers?.['Content-Type'] !== 'application/octet-stream') {
+                if (config.data && config.headers?.['Content-Type'] !== ContentType.binary) {
                     const dataStr = typeof config.data === 'string' ? config.data : JSON.stringify(config.data);
                     if (dataStr.length > 200) {
                         this.debug('  Body:', dataStr.substring(0, 200) + '... (truncated)');
